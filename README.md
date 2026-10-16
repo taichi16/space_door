@@ -7,8 +7,9 @@
 ## 🌟 特色功能 (Key Features)
 
 1. **電影級工業裝甲氣密門 (Heavy Armor Blast Door)**：
-   - 根據 1:1 工業級太空艙門硬表面細節建模，搭配青藍色霓虹導光燈條（Neon Lightstrips）與警戒塗裝。
-   - 雙扇重型艙門支援向兩側 100% 完全滑移開啟（零視角遮擋）。
+   - 外部固定重型裝甲門框（Outer Bulkhead Frame）與內部雙扇滑動門（Inner Sliding Leaves）分層運作。
+   - 驗證成功時，僅內部八角形門扇向兩側平穩滑入門框收納凹槽中，外部門框維持固定不動。
+   - 門扇完全開啟後，鏡頭視角平滑向前推進（Camera Dolly-In）穿過氣密門洞直入深空，呈現最極致的真實機械邏輯。
 
 2. **真實天花板全息投影機構 (Retractable Overhead Projector)**：
    - 天花板實體發光投影鏡頭（Emitter Head），投射出錐形散射體積光束（Volumetric Light Cone）。
@@ -17,7 +18,7 @@
 3. **科幻互動認證 HUD (Cybernetic Hologram Access)**：
    - 懸浮全息認證面板，支援帳號密碼輸入、鍵盤 `Enter` 快速驗證。
    - 提供「快速帶入授權憑證」與「錯誤憑證測試」按鈕。
-   - 門頂狀態指示燈：認證失敗時警報紅燈急促閃爍（Strobe）；認證成功時綠燈常亮。
+   - 門頂狀態指示燈：認證失敗時警報紅燈急促閃爍（Strobe）；認證成功時綠燈閃爍（Strobe）。
 
 4. **8K 深空銀河星空全景 (Fixed 8K Deep Space Panorama)**：
    - 艙門開啟後直面浩瀚宇宙，呈現完全固定、無錯位重影的**地球 (Earth)**、**拉遠距離之月球 (Moon)** 與**火星 (Mars)**。

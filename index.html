@@ -112,60 +112,200 @@
     }
 
     /* ========================================================
-       2. 中層：依參考圖 1:1 打造的重裝甲星際艙門 (左右對開)
+       2. 中層：星際氣密艙門總成 (固定外門框 + 內部左右滑動門板)
        ======================================================== */
-    .blast-door-wrapper {
+    .airlock-chamber {
       position: absolute;
       inset: 0;
       z-index: 10;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       pointer-events: none;
       overflow: hidden;
+      transform-origin: 50% 52%;
+      transition: transform 2.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 1.8s ease-in-out;
     }
 
-    /* 左右雙扇 100% 精準對開的白色機械裝甲門 */
-    .door-half {
+    /* 視角往門外推進：艙門總成向前縮放穿過鏡頭 (Camera Dolly Forward Into Deep Space) */
+    .camera-dolly-in .airlock-chamber {
+      transform: scale(3.2);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* 推進時深空星系微幅視差縮放 */
+    .camera-dolly-in .deep-space-panorama {
+      transform: scale(1.08);
+    }
+
+    /* ========================================================
+       2A. 內部可開啟的左右雙扇裝甲門板 (位於門框後方層，向兩側滑入門框凹槽)
+       ======================================================== */
+    .inner-doors-container {
       position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 50vw;
+      inset: 0;
+      z-index: 11;
+      pointer-events: none;
+    }
+
+    .inner-door-leaf {
+      position: absolute;
+      inset: 0;
+      width: 100vw;
       height: 100vh;
       background-image: url('assets/scifi_door.jpg');
       background-size: 100vw 100vh;
       background-repeat: no-repeat;
-      transition: transform 2.0s cubic-bezier(0.77, 0, 0.175, 1);
-      box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.6);
-      overflow: hidden;
+      transition: transform 1.8s cubic-bezier(0.77, 0, 0.175, 1);
     }
 
-    /* 左門扇 (對齊左半部) */
-    .door-half-left {
+    /* 左內門扇：精確裁切紅線內部左半邊門片 */
+    .inner-door-left {
       left: 0;
-      background-position: left center;
-      border-right: 2px solid rgba(0, 242, 254, 0.5);
-      box-shadow: 12px 0 45px rgba(0, 0, 0, 0.95);
+      clip-path: polygon(
+        24.5% 20.5%,
+        50.05% 20.5%,
+        50.05% 94.0%,
+        18.5% 94.0%,
+        11.2% 81.5%,
+        11.2% 43.5%
+      );
+      -webkit-clip-path: polygon(
+        24.5% 20.5%,
+        50.05% 20.5%,
+        50.05% 94.0%,
+        18.5% 94.0%,
+        11.2% 81.5%,
+        11.2% 43.5%
+      );
+      box-shadow: 10px 0 35px rgba(0, 0, 0, 0.9);
     }
 
-    /* 右門扇 (對齊右半部) */
-    .door-half-right {
-      right: 0;
-      background-position: right center;
-      border-left: 2px solid rgba(0, 242, 254, 0.5);
-      box-shadow: -12px 0 45px rgba(0, 0, 0, 0.95);
+    /* 右內門扇：精確裁切紅線內部右半邊門片 */
+    .inner-door-right {
+      left: 0;
+      clip-path: polygon(
+        49.95% 20.5%,
+        75.5% 20.5%,
+        88.8% 43.5%,
+        88.8% 81.5%,
+        81.5% 94.0%,
+        49.95% 94.0%
+      );
+      -webkit-clip-path: polygon(
+        49.95% 20.5%,
+        75.5% 20.5%,
+        88.8% 43.5%,
+        88.8% 81.5%,
+        81.5% 94.0%,
+        49.95% 94.0%
+      );
+      box-shadow: -10px 0 35px rgba(0, 0, 0, 0.9);
     }
 
-    /* 100% 完全全開至兩側視野外 (Zero Dolly 直視深空) */
-    .doors-open .door-half-left {
-      transform: translateX(-101%);
+    /* 門開啟時：左門片向左滑入左門框深處，右門片向右滑入右門框深處 (外門框保持不動) */
+    .doors-sliding .inner-door-left {
+      transform: translateX(-42vw);
     }
-    .doors-open .door-half-right {
-      transform: translateX(101%);
+    .doors-sliding .inner-door-right {
+      transform: translateX(42vw);
+    }
+    .doors-sliding .neon-door-lock-strip {
+      opacity: 0;
+      transform: translate(-50%, -50%) scaleY(0.1);
+    }
+
+    /* 門扇中央鎖定部位的垂直青藍霓虹光條 */
+    .neon-door-lock-strip {
+      position: absolute;
+      top: 57.25%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 4px;
+      height: 73.5vh;
+      background: var(--neon-cyan);
+      box-shadow: 0 0 16px var(--neon-cyan), 0 0 35px var(--neon-cyan-glow);
+      z-index: 12;
+      pointer-events: none;
+      transition: opacity 0.4s ease, transform 0.6s ease;
+      animation: neonBreathe 2.4s infinite alternate ease-in-out;
     }
 
     /* ========================================================
-       3. 霓虹燈光效增強層 (覆蓋在門面燈具上的動態光暈)
+       2B. 外部固定不動的重型裝甲門框 (八角形氣密開孔，覆蓋於門板上方)
+       ======================================================== */
+    .outer-bulkhead-frame {
+      position: absolute;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image: url('assets/scifi_door.jpg');
+      background-size: 100vw 100vh;
+      background-repeat: no-repeat;
+      z-index: 13;
+      pointer-events: none;
+      clip-path: polygon(
+        evenodd,
+        0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%,
+        24.5% 20.5%,
+        75.5% 20.5%,
+        88.8% 43.5%,
+        88.8% 81.5%,
+        81.5% 94.0%,
+        18.5% 94.0%,
+        11.2% 81.5%,
+        11.2% 43.5%,
+        24.5% 20.5%
+      );
+      -webkit-clip-path: polygon(
+        evenodd,
+        0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%,
+        24.5% 20.5%,
+        75.5% 20.5%,
+        88.8% 43.5%,
+        88.8% 81.5%,
+        81.5% 94.0%,
+        18.5% 94.0%,
+        11.2% 81.5%,
+        11.2% 43.5%,
+        24.5% 20.5%
+      );
+    }
+
+    /* 門框內緣立體倒角陰影與氣密槽光影 */
+    .doorway-aperture-rim {
+      position: absolute;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 14;
+      clip-path: polygon(
+        24.5% 20.5%,
+        75.5% 20.5%,
+        88.8% 43.5%,
+        88.8% 81.5%,
+        81.5% 94.0%,
+        18.5% 94.0%,
+        11.2% 81.5%,
+        11.2% 43.5%
+      );
+      -webkit-clip-path: polygon(
+        24.5% 20.5%,
+        75.5% 20.5%,
+        88.8% 43.5%,
+        88.8% 81.5%,
+        81.5% 94.0%,
+        18.5% 94.0%,
+        11.2% 81.5%,
+        11.2% 43.5%
+      );
+      box-shadow: 
+        inset 0 0 30px rgba(0, 0, 0, 0.95),
+        inset 0 0 70px rgba(0, 0, 0, 0.8),
+        inset 0 0 8px rgba(0, 242, 254, 0.4);
+    }
+
+    /* ========================================================
+       3. 霓虹燈光效增強層 (固定於外門框機械組件上)
        ======================================================== */
     /* 頂部兩組吊掛機械支架的青藍霓虹燈條 */
     .neon-bracket-light {
@@ -177,11 +317,12 @@
       box-shadow: 0 0 16px var(--neon-cyan), 0 0 35px var(--neon-cyan-glow);
       border-radius: 2px;
       animation: neonBreathe 2.8s infinite alternate ease-in-out;
+      z-index: 15;
     }
-    .door-half-left .neon-bracket-light { right: calc(50vw - 32%); }
-    .door-half-right .neon-bracket-light { left: calc(50vw - 32%); }
+    .neon-bracket-left { left: 18%; }
+    .neon-bracket-right { right: 18%; }
 
-    /* 兩側立柱側邊的疊加發光電池/散熱槽霓虹燈 */
+    /* 兩側立柱側邊的疊加發光散熱槽霓虹燈 */
     .neon-pillar-strip {
       position: absolute;
       width: 6px;
@@ -190,28 +331,13 @@
       box-shadow: 0 0 14px var(--neon-cyan), 0 0 28px var(--neon-cyan-glow);
       border-radius: 3px;
       animation: neonBreathe 3.2s infinite alternate ease-in-out;
+      z-index: 15;
     }
-    .door-half-left .neon-pillar-strip-1 { top: 56%; left: 6.2%; }
-    .door-half-left .neon-pillar-strip-2 { top: 64%; left: 6.2%; }
-    .door-half-left .neon-pillar-strip-3 { top: 72%; left: 6.2%; }
-
-    .door-half-right .neon-pillar-strip-1 { top: 56%; right: 6.2%; }
-    .door-half-right .neon-pillar-strip-2 { top: 64%; right: 6.2%; }
-    .door-half-right .neon-pillar-strip-3 { top: 72%; right: 6.2%; }
-
-    /* 門扇中央鎖定部位的垂直青藍霓虹光條 */
-    .neon-door-lock-strip {
-      position: absolute;
-      top: 51%;
-      width: 6px;
-      height: 48px;
-      background: var(--neon-cyan);
-      box-shadow: 0 0 16px var(--neon-cyan), 0 0 32px var(--neon-cyan-glow);
-      border-radius: 2px;
-      animation: neonBreathe 2.4s infinite alternate ease-in-out;
-    }
-    .door-half-left .neon-door-lock-strip { right: 44%; }
-    .door-half-right .neon-door-lock-strip { left: 44%; }
+    .neon-pillar-strip.left { left: 3.1vw; }
+    .neon-pillar-strip.right { right: 3.1vw; }
+    .neon-pillar-strip-1 { top: 56%; }
+    .neon-pillar-strip-2 { top: 64%; }
+    .neon-pillar-strip-3 { top: 72%; }
 
     @keyframes neonBreathe {
       0% { opacity: 0.75; filter: brightness(0.9); }
@@ -219,26 +345,46 @@
       100% { opacity: 0.75; filter: brightness(0.9); }
     }
 
-    /* 門頂中央狀態紅綠指示燈 (固定於天花板中心) */
+    /* 門頂中央狀態紅綠指示燈 (固定於天花板中心，絕不被投影儀遮蔽) */
     .airlock-status-beacon {
       position: absolute;
-      top: 14px;
+      top: 60px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 20;
-      background: rgba(10, 16, 28, 0.92);
+      z-index: 30;
+      background: rgba(10, 16, 28, 0.95);
       border: 2px solid #334155;
-      padding: 6px 28px;
+      padding: 6px 20px;
       border-radius: 20px;
-      box-shadow: 0 4px 25px rgba(0,0,0,0.9), 0 0 15px rgba(15, 23, 42, 0.8);
+      box-shadow: 0 4px 30px rgba(0,0,0,0.95), 0 0 15px rgba(15, 23, 42, 0.9);
       display: flex;
       align-items: center;
-      gap: 22px;
+      gap: 14px;
+      backdrop-filter: blur(8px);
+    }
+
+    .beacon-unit {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .beacon-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 10px;
+      color: #64748b;
+      letter-spacing: 1px;
+    }
+
+    .beacon-divider {
+      width: 1px;
+      height: 14px;
+      background: #334155;
     }
 
     .beacon-lamp {
-      width: 16px;
-      height: 16px;
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
       border: 1.5px solid #334155;
       transition: all 0.3s;
@@ -246,14 +392,18 @@
     .beacon-lamp.red { background: #3b0707; }
     .beacon-lamp.green { background: #042f1a; }
 
-    .beacon-lamp.red.alarm-strobe {
+    .beacon-lamp.red.alarm-strobe,
+    .hud-indicator.red.alarm-strobe {
       background: #f43f5e;
-      box-shadow: 0 0 20px #f43f5e, 0 0 45px #e11d48;
+      box-shadow: 0 0 25px #f43f5e, 0 0 50px #e11d48, inset 0 0 6px #ffffff;
       animation: alertStrobe 0.16s infinite alternate;
     }
-    .beacon-lamp.green.active-on {
+    .beacon-lamp.green.active-on,
+    .beacon-lamp.green.success-strobe,
+    .hud-indicator.green.active-on {
       background: #10b981;
-      box-shadow: 0 0 22px #10b981, 0 0 50px #059669;
+      box-shadow: 0 0 25px #10b981, 0 0 55px #059669, inset 0 0 6px #ffffff;
+      animation: alertStrobe 0.18s infinite alternate;
     }
 
     @keyframes alertStrobe {
@@ -616,9 +766,42 @@
       border-color: rgba(0, 242, 254, 0.6);
     }
 
+    .hud-status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 12px;
+      padding: 6px 14px;
+      border-radius: 8px;
+      background: rgba(0, 242, 254, 0.04);
+      border: 1px solid rgba(0, 242, 254, 0.15);
+      transition: all 0.3s;
+    }
+    .hud-status-bar.error {
+      background: rgba(244, 63, 94, 0.12);
+      border-color: rgba(244, 63, 94, 0.6);
+      box-shadow: 0 0 20px rgba(244, 63, 94, 0.4);
+    }
+    .hud-status-bar.success {
+      background: rgba(16, 185, 129, 0.12);
+      border-color: rgba(16, 185, 129, 0.6);
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .hud-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid #334155;
+      display: inline-block;
+      transition: all 0.2s;
+    }
+    .hud-indicator.red { background: #3b0707; }
+    .hud-indicator.green { background: #042f1a; }
+
     .hud-status-text {
       text-align: center;
-      margin-top: 10px;
       font-family: 'Share Tech Mono', monospace;
       font-size: 11px;
       min-height: 16px;
@@ -633,6 +816,17 @@
     .hud-status-text.success {
       color: #4ade80;
       text-shadow: 0 0 10px rgba(74, 222, 128, 0.8);
+    }
+
+    @keyframes hudShake {
+      0%, 100% { transform: translate(-50%, -50%); }
+      20%, 60% { transform: translate(calc(-50% - 8px), -50%); }
+      40%, 80% { transform: translate(calc(-50% + 8px), -50%); }
+    }
+    .hologram-hud.alarm-shake {
+      animation: hudShake 0.45s ease-in-out;
+      border-color: rgba(244, 63, 94, 0.8) !important;
+      box-shadow: 0 0 45px rgba(244, 63, 94, 0.5), inset 0 0 30px rgba(244, 63, 94, 0.25) !important;
     }
 
     /* ========================================================
@@ -686,37 +880,50 @@
     CABIN PRESSURE: 101.3 KPA // HERMETIC SEAL VERIFIED
   </div>
 
-  <!-- 2. 中層：依參考圖 1:1 打造的重裝甲星際艙門 (左右對開) -->
-  <div class="blast-door-wrapper">
-    <!-- 左門扇 -->
-    <div class="door-half door-half-left">
-      <!-- 頂部吊掛機械支架的青藍霓虹燈條 -->
-      <div class="neon-bracket-light"></div>
-      <!-- 側柱散熱模組發光霓虹燈條 -->
-      <div class="neon-pillar-strip neon-pillar-strip-1"></div>
-      <div class="neon-pillar-strip neon-pillar-strip-2"></div>
-      <div class="neon-pillar-strip neon-pillar-strip-3"></div>
-      <!-- 門板中央鎖柱發光霓虹燈條 -->
+  <!-- 2. 中層：星際氣密艙門總成 (固定外門框 + 內部左右滑動門板) -->
+  <div class="airlock-chamber" id="airlockChamber">
+    <!-- 內部可開啟的左右雙扇裝甲門板 (向兩側滑入門框凹槽) -->
+    <div class="inner-doors-container">
+      <!-- 左內門扇 -->
+      <div class="inner-door-leaf inner-door-left"></div>
+      <!-- 右內門扇 -->
+      <div class="inner-door-leaf inner-door-right"></div>
+      <!-- 門扇中央鎖定部位垂直發光光條 -->
       <div class="neon-door-lock-strip"></div>
     </div>
 
-    <!-- 右門扇 -->
-    <div class="door-half door-half-right">
+    <!-- 外部固定不動的重型裝甲門框 (八角形氣密開孔，覆蓋於門板上方) -->
+    <div class="outer-bulkhead-frame">
+      <!-- 門框內緣立體倒角光影 -->
+      <div class="doorway-aperture-rim"></div>
+
       <!-- 頂部吊掛機械支架的青藍霓虹燈條 -->
-      <div class="neon-bracket-light"></div>
-      <!-- 側柱散熱模組發光霓虹燈條 -->
-      <div class="neon-pillar-strip neon-pillar-strip-1"></div>
-      <div class="neon-pillar-strip neon-pillar-strip-2"></div>
-      <div class="neon-pillar-strip neon-pillar-strip-3"></div>
-      <!-- 門板中央鎖柱發光霓虹燈條 -->
-      <div class="neon-door-lock-strip"></div>
+      <div class="neon-bracket-light neon-bracket-left"></div>
+      <div class="neon-bracket-light neon-bracket-right"></div>
+
+      <!-- 側柱散熱模組發光霓虹燈條 (左) -->
+      <div class="neon-pillar-strip neon-pillar-strip-1 left"></div>
+      <div class="neon-pillar-strip neon-pillar-strip-2 left"></div>
+      <div class="neon-pillar-strip neon-pillar-strip-3 left"></div>
+
+      <!-- 側柱散熱模組發光霓虹燈條 (右) -->
+      <div class="neon-pillar-strip neon-pillar-strip-1 right"></div>
+      <div class="neon-pillar-strip neon-pillar-strip-2 right"></div>
+      <div class="neon-pillar-strip neon-pillar-strip-3 right"></div>
     </div>
   </div>
 
-  <!-- 門頂指示燈組 (固定於天花板中心) -->
+  <!-- 門頂指示燈組 (固定於天花板中心，絕不被投影儀遮蔽) -->
   <div class="airlock-status-beacon">
-    <div class="beacon-lamp red" id="lampRed"></div>
-    <div class="beacon-lamp green" id="lampGreen"></div>
+    <div class="beacon-unit">
+      <div class="beacon-lamp red" id="lampRed" title="DOOR LOCKED // ACCESS DENIED"></div>
+      <span class="beacon-text">LOCK</span>
+    </div>
+    <div class="beacon-divider"></div>
+    <div class="beacon-unit">
+      <div class="beacon-lamp green" id="lampGreen" title="DOOR UNLOCKED // ACCESS GRANTED"></div>
+      <span class="beacon-text">OPEN</span>
+    </div>
   </div>
 
   <!-- 開門洩壓白霧蒸氣畫布 -->
@@ -768,7 +975,11 @@
       </div>
     </div>
 
-    <div class="hud-status-text" id="hudStatus">AWAITING CREDENTIALS...</div>
+    <div class="hud-status-bar" id="hudStatusBar">
+      <span class="hud-indicator red" id="hudLampRed"></span>
+      <div class="hud-status-text" id="hudStatus">AWAITING CREDENTIALS...</div>
+      <span class="hud-indicator green" id="hudLampGreen"></span>
+    </div>
   </div>
 
   <!-- 5. 閉門重置列 (全開後浮現於底端) -->
@@ -793,6 +1004,9 @@
   const userInput = document.getElementById("userInput");
   const passInput = document.getElementById("passInput");
   const hudStatus = document.getElementById("hudStatus");
+  const hudLampRed = document.getElementById("hudLampRed");
+  const hudLampGreen = document.getElementById("hudLampGreen");
+  const hudStatusBar = document.getElementById("hudStatusBar");
 
   /* ====================================================================
      B. Web Audio API 科幻音效合成 (氣密閥洩壓、全息操作與艙門機械聲)
@@ -931,7 +1145,19 @@
   /* ====================================================================
      D. 互動控制與艙門開閉邏輯 (嚴格符合物理與機械邏輯)
      ==================================================================== */
+  let authResetTimer = null;
+
   function autoFill(u, p) {
+    if (authResetTimer) {
+      clearTimeout(authResetTimer);
+      authResetTimer = null;
+    }
+    lampRed.className = "beacon-lamp red";
+    lampGreen.className = "beacon-lamp green";
+    if (hudLampRed) hudLampRed.className = "hud-indicator red";
+    if (hudLampGreen) hudLampGreen.className = "hud-indicator green";
+    if (hudStatusBar) hudStatusBar.className = "hud-status-bar";
+    holoHud.classList.remove("alarm-shake");
     userInput.value = u;
     passInput.value = p;
     playTone(440, 'sine', 0.08);
@@ -940,15 +1166,26 @@
   }
 
   function handleAuth() {
+    if (authResetTimer) {
+      clearTimeout(authResetTimer);
+      authResetTimer = null;
+    }
+
     const u = userInput.value.trim();
     const p = passInput.value.trim();
 
     lampRed.className = "beacon-lamp red";
     lampGreen.className = "beacon-lamp green";
+    if (hudLampRed) hudLampRed.className = "hud-indicator red";
+    if (hudLampGreen) hudLampGreen.className = "hud-indicator green";
+    if (hudStatusBar) hudStatusBar.className = "hud-status-bar";
+    holoHud.classList.remove("alarm-shake");
 
     if (u === AUTH_USER && p === AUTH_PASS) {
-      // 1. 驗證成功：綠燈常亮、音效
+      // 1. 驗證成功：天花板與 HUD 綠燈同步閃爍、音效
       lampGreen.classList.add("active-on");
+      if (hudLampGreen) hudLampGreen.classList.add("active-on");
+      if (hudStatusBar) hudStatusBar.className = "hud-status-bar success";
       hudStatus.className = "hud-status-text success";
       hudStatus.textContent = "ACCESS GRANTED // RETRACTING PROJECTOR";
       playSuccessSound();
@@ -963,45 +1200,84 @@
         playDecompressionSound();
       }, 300);
 
-      // 4. 裝甲門 100% 完全滑移全開至兩側視野之外，純淨直視原版固定的地球、月球與火星
+      // 4. 第一階段：僅開啟內部的門（向兩側滑開收入門框凹槽，外門框保持不動）
       setTimeout(() => {
-        stage.classList.add("doors-open");
-        recloseBar.style.display = "block";
+        stage.classList.add("doors-sliding");
+        playTone(160, 'sawtooth', 1.2, 0, 0.08);
       }, 500);
 
+      // 5. 第二階段：內門完全開啟後，將視野往門外推進看到星空 (Camera Dolly Forward)
+      setTimeout(() => {
+        stage.classList.add("camera-dolly-in");
+        playTone(110, 'sine', 1.8, 0, 0.12);
+      }, 2300);
+
+      // 6. 浮現重新關閉艙門控制列
+      setTimeout(() => {
+        recloseBar.style.display = "block";
+      }, 4200);
+
     } else {
-      // 驗證失敗：急促紅燈閃爍、警告音
+      // 驗證失敗：天花板與 HUD 紅燈急促閃爍、警告音、全息面板告警震動
       lampRed.classList.add("alarm-strobe");
+      if (hudLampRed) hudLampRed.classList.add("alarm-strobe");
+      if (hudStatusBar) hudStatusBar.className = "hud-status-bar error";
       hudStatus.className = "hud-status-text error";
       hudStatus.textContent = "ACCESS DENIED // PASSCODE INVALID";
+      holoHud.classList.add("alarm-shake");
       playAlarmSound();
 
-      setTimeout(() => {
+      authResetTimer = setTimeout(() => {
         lampRed.classList.remove("alarm-strobe");
+        if (hudLampRed) hudLampRed.classList.remove("alarm-strobe");
+        if (hudStatusBar) hudStatusBar.className = "hud-status-bar";
         hudStatus.className = "hud-status-text";
         hudStatus.textContent = "AWAITING CREDENTIALS...";
+        holoHud.classList.remove("alarm-shake");
+        authResetTimer = null;
       }, 2000);
     }
   }
 
   function handleReclose() {
-    stage.classList.remove("doors-open");
-    lampGreen.className = "beacon-lamp green";
+    if (authResetTimer) {
+      clearTimeout(authResetTimer);
+      authResetTimer = null;
+    }
     recloseBar.style.display = "none";
     hudStatus.className = "hud-status-text";
-    hudStatus.textContent = "SEALING AIRLOCK...";
+    hudStatus.textContent = "RETRACTING VIEW // SEALING AIRLOCK...";
 
-    playTone(330, 'sine', 0.25, 0);
+    // 1. 第一階段：視角由深空拉回艙內 (Camera Dolly Back to Interior)
+    stage.classList.remove("camera-dolly-in");
+    playTone(140, 'sine', 1.5, 0, 0.1);
 
-    // 艙門合攏鎖死後，天花板投影儀重新滑出降下，並向下射出光束投射全息 HUD
+    // 2. 第二階段：視角回正後，內部兩扇裝甲門合攏鎖定 (Doors Slide Inward & Lock)
     setTimeout(() => {
+      stage.classList.remove("doors-sliding");
+      playTone(180, 'sawtooth', 1.2, 0, 0.08);
+      setTimeout(() => {
+        playTone(80, 'sine', 0.4, 0, 0.25);
+        playTone(330, 'sine', 0.25, 0);
+      }, 1600);
+    }, 1800);
+
+    // 3. 第三階段：天花板投影儀滑出降下，投射全息 HUD 面板
+    setTimeout(() => {
+      lampGreen.className = "beacon-lamp green";
+      lampRed.className = "beacon-lamp red";
+      if (hudLampRed) hudLampRed.className = "hud-indicator red";
+      if (hudLampGreen) hudLampGreen.className = "hud-indicator green";
+      if (hudStatusBar) hudStatusBar.className = "hud-status-bar";
+      holoHud.classList.remove("alarm-shake");
+
       projectorAssembly.classList.remove("retracted");
       setTimeout(() => {
         holoHud.classList.remove("dismiss");
         hudStatus.textContent = "AWAITING CREDENTIALS...";
         playTone(660, 'sine', 0.15, 0.1);
       }, 400);
-    }, 1500);
+    }, 3800);
   }
 
   document.addEventListener("keydown", (e) => {
