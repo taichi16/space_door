@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>太空艙門入口 - 電影級擬真太空艙與深空全景</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      user-select: none;
+    }
+
+    :root {
+      --neon-cyan: #00f2fe;
+      --neon-cyan-glow: rgba(0, 242, 254, 0.85);
+      --neon-green: #10b981;
+      --neon-green-glow: rgba(16, 185, 129, 0.9);
+      --neon-red: #f43f5e;
+      --neon-red-glow: rgba(244, 63, 94, 0.95);
+      --neon-amber: #f59e0b;
+    }
+
+    body, html {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000206;
+      font-family: 'Rajdhani', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #f8fafc;
+    }
+
+    /* 16:9 全螢幕舞台視口 */
+    .portal-stage {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      overflow: hidden;
+    }
+
+    /* ========================================================
+       1. 底層：純淨 8K 電影級擬真深空 (固定的地球、拉遠之月球與壯麗火星)
+       ======================================================== */
+    .deep-space-panorama {
+      position: absolute;
+      inset: -2%;
+      width: 104%;
+      height: 104%;
+      background-image: url('assets/deep_space.jpg');
+      background-size: cover;
+      background-position: center 50%;
+      z-index: 1;
+      animation: spaceSlowDrift 50s ease-in-out infinite alternate;
+      filter: saturate(1.12) brightness(1.05);
+    }
+
+    @keyframes spaceSlowDrift {
+      0% { transform: scale(1) translate(0, 0); }
+      50% { transform: scale(1.02) translate(-0.5%, 0.3%); }
+      100% { transform: scale(1.01) translate(0.4%, -0.3%); }
+    }
+
+    /* 星光微粒呼吸閃爍層 */
+    .starlight-twinkle-layer {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        radial-gradient(1.2px 1.2px at 45px 65px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(1.8px 1.8px at 180px 120px, #a5f3fc, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 320px 280px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(2.2px 2.2px at 540px 180px, #fef08a, rgba(0,0,0,0)),
+        radial-gradient(1.4px 1.4px at 780px 420px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 960px 150px, #93c5fd, rgba(0,0,0,0)),
+        radial-gradient(1.6px 1.6px at 1240px 320px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(1.8px 1.8px at 1520px 210px, #e0f2fe, rgba(0,0,0,0));
+      background-repeat: repeat;
+      background-size: 750px 550px;
+      opacity: 0.85;
+      z-index: 2;
+      pointer-events: none;
+      animation: twinklePulse 4s infinite alternate ease-in-out;
+    }
+
+    @keyframes twinklePulse {
+      0% { opacity: 0.65; }
+      50% { opacity: 1; }
+      100% { opacity: 0.75; }
+    }
+
+    /* 深空遙測資訊 HUD */
+    .space-telemetry {
+      position: absolute;
+      bottom: 24px;
+      left: 36px;
+      z-index: 3;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: rgba(56, 189, 248, 0.75);
+      line-height: 1.6;
+      pointer-events: none;
+      text-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    }
+
+    /* ========================================================
+       2. 中層：依參考圖 1:1 打造的重裝甲星際艙門 (左右對開)
+       ======================================================== */
+    .blast-door-wrapper {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    /* 左右雙扇 100% 精準對開的白色機械裝甲門 */
+    .door-half {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 50vw;
+      height: 100vh;
+      background-image: url('assets/scifi_door.jpg');
+      background-size: 100vw 100vh;
+      background-repeat: no-repeat;
+      transition: transform 2.0s cubic-bezier(0.77, 0, 0.175, 1);
+      box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.6);
+      overflow: hidden;
+    }
+
+    /* 左門扇 (對齊左半部) */
+    .door-half-left {
+      left: 0;
+      background-position: left center;
+      border-right: 2px solid rgba(0, 242, 254, 0.5);
+      box-shadow: 12px 0 45px rgba(0, 0, 0, 0.95);
+    }
+
+    /* 右門扇 (對齊右半部) */
+    .door-half-right {
+      right: 0;
+      background-position: right center;
+      border-left: 2px solid rgba(0, 242, 254, 0.5);
+      box-shadow: -12px 0 45px rgba(0, 0, 0, 0.95);
+    }
+
+    /* 100% 完全全開至兩側視野外 (Zero Dolly 直視深空) */
+    .doors-open .door-half-left {
+      transform: translateX(-101%);
+    }
+    .doors-open .door-half-right {
+      transform: translateX(101%);
+    }
+
+    /* ========================================================
+       3. 霓虹燈光效增強層 (覆蓋在門面燈具上的動態光暈)
+       ======================================================== */
+    /* 頂部兩組吊掛機械支架的青藍霓虹燈條 */
+    .neon-bracket-light {
+      position: absolute;
+      top: 15%;
+      width: 48px;
+      height: 8px;
+      background: var(--neon-cyan);
+      box-shadow: 0 0 16px var(--neon-cyan), 0 0 35px var(--neon-cyan-glow);
+      border-radius: 2px;
+      animation: neonBreathe 2.8s infinite alternate ease-in-out;
+    }
+    .door-half-left .neon-bracket-light { right: calc(50vw - 32%); }
+    .door-half-right .neon-bracket-light { left: calc(50vw - 32%); }
+
+    /* 兩側立柱側邊的疊加發光電池/散熱槽霓虹燈 */
+    .neon-pillar-strip {
+      position: absolute;
+      width: 6px;
+      height: 38px;
+      background: var(--neon-cyan);
+      box-shadow: 0 0 14px var(--neon-cyan), 0 0 28px var(--neon-cyan-glow);
+      border-radius: 3px;
+      animation: neonBreathe 3.2s infinite alternate ease-in-out;
+    }
+    .door-half-left .neon-pillar-strip-1 { top: 56%; left: 6.2%; }
+    .door-half-left .neon-pillar-strip-2 { top: 64%; left: 6.2%; }
+    .door-half-left .neon-pillar-strip-3 { top: 72%; left: 6.2%; }
+
+    .door-half-right .neon-pillar-strip-1 { top: 56%; right: 6.2%; }
+    .door-half-right .neon-pillar-strip-2 { top: 64%; right: 6.2%; }
+    .door-half-right .neon-pillar-strip-3 { top: 72%; right: 6.2%; }
+
+    /* 門扇中央鎖定部位的垂直青藍霓虹光條 */
+    .neon-door-lock-strip {
+      position: absolute;
+      top: 51%;
+      width: 6px;
+      height: 48px;
+      background: var(--neon-cyan);
+      box-shadow: 0 0 16px var(--neon-cyan), 0 0 32px var(--neon-cyan-glow);
+      border-radius: 2px;
+      animation: neonBreathe 2.4s infinite alternate ease-in-out;
+    }
+    .door-half-left .neon-door-lock-strip { right: 44%; }
+    .door-half-right .neon-door-lock-strip { left: 44%; }
+
+    @keyframes neonBreathe {
+      0% { opacity: 0.75; filter: brightness(0.9); }
+      50% { opacity: 1; filter: brightness(1.4); }
+      100% { opacity: 0.75; filter: brightness(0.9); }
+    }
+
+    /* 門頂中央狀態紅綠指示燈 (固定於天花板中心) */
+    .airlock-status-beacon {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 20;
+      background: rgba(10, 16, 28, 0.92);
+      border: 2px solid #334155;
+      padding: 6px 28px;
+      border-radius: 20px;
+      box-shadow: 0 4px 25px rgba(0,0,0,0.9), 0 0 15px rgba(15, 23, 42, 0.8);
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .beacon-lamp {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1.5px solid #334155;
+      transition: all 0.3s;
+    }
+    .beacon-lamp.red { background: #3b0707; }
+    .beacon-lamp.green { background: #042f1a; }
+
+    .beacon-lamp.red.alarm-strobe {
+      background: #f43f5e;
+      box-shadow: 0 0 20px #f43f5e, 0 0 45px #e11d48;
+      animation: alertStrobe 0.16s infinite alternate;
+    }
+    .beacon-lamp.green.active-on {
+      background: #10b981;
+      box-shadow: 0 0 22px #10b981, 0 0 50px #059669;
+    }
+
+    @keyframes alertStrobe {
+      from { opacity: 0.2; }
+      to { opacity: 1; }
+    }
+
+    /* 開門瞬間氣密洩壓白霧蒸氣畫布 */
+    #steamCanvas {
+      position: absolute;
+      inset: 0;
+      z-index: 18;
+      pointer-events: none;
+    }
+
+    /* ========================================================
+       4. 擬真實體全息投影燈組 (開門時自動收合縮回天花板)
+       ======================================================== */
+    .projector-assembly {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) translateY(0);
+      z-index: 24;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: transform 0.65s cubic-bezier(0.77, 0, 0.175, 1), opacity 0.5s ease;
+    }
+
+    /* 開門後依邏輯完全收起 (Retract into ceiling bulkhead) */
+    .projector-assembly.retracted {
+      transform: translateX(-50%) translateY(-115%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .projector-assembly.retracted .volumetric-beam-cone,
+    .projector-assembly.retracted .volumetric-god-rays,
+    .projector-assembly.retracted .beam-laser-scanner,
+    .projector-assembly.retracted .anamorphic-flare-line {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    /* 投影儀金屬安裝基座 */
+    .projector-mount {
+      position: relative;
+      background: linear-gradient(180deg, #1e293b 0%, #0d1522 70%, #030712 100%);
+      border: 2px solid #475569;
+      border-top: none;
+      border-radius: 0 0 18px 18px;
+      padding: 6px 32px 10px;
+      box-shadow: 
+        0 8px 35px rgba(0, 0, 0, 0.95),
+        0 0 20px rgba(0, 242, 254, 0.35);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .projector-label {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 8px;
+      letter-spacing: 3px;
+      color: #64748b;
+      text-transform: uppercase;
+    }
+
+    /* 雙光學菲涅爾透鏡投射口 */
+    .projector-lens-box {
+      position: relative;
+      width: 74px;
+      height: 22px;
+      background: radial-gradient(circle at 50% 50%, #083344 0%, #020617 100%);
+      border: 2px solid #0284c7;
+      border-radius: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 
+        inset 0 0 10px #00f2fe,
+        0 0 20px rgba(0, 242, 254, 0.7);
+    }
+
+    /* 高能光子發射燈芯 */
+    .lens-emitter-core {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #ffffff 10%, #00f2fe 50%, #0284c7 90%);
+      box-shadow: 
+        0 0 15px #ffffff,
+        0 0 30px #00f2fe,
+        0 0 50px rgba(0, 242, 254, 0.9);
+      animation: emitterCoreGlow 2s infinite alternate ease-in-out;
+    }
+
+    @keyframes emitterCoreGlow {
+      0% { transform: scale(0.9); filter: brightness(1); }
+      100% { transform: scale(1.15); filter: brightness(1.5); }
+    }
+
+    /* 橫向變形鏡頭眩光 */
+    .anamorphic-flare-line {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 320px;
+      height: 2.5px;
+      background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(0, 242, 254, 0.2) 20%, 
+        #00f2fe 45%, 
+        #ffffff 50%, 
+        #00f2fe 55%, 
+        rgba(0, 242, 254, 0.2) 80%, 
+        transparent 100%
+      );
+      box-shadow: 0 0 12px #00f2fe, 0 0 25px rgba(0, 242, 254, 0.8);
+      pointer-events: none;
+    }
+
+    /* 逼真的立體體積光錐 */
+    .volumetric-beam-cone {
+      position: absolute;
+      top: 42px;
+      width: 520px;
+      height: 560px;
+      background: linear-gradient(180deg, 
+        rgba(0, 242, 254, 0.75) 0%, 
+        rgba(0, 242, 254, 0.35) 25%, 
+        rgba(0, 242, 254, 0.12) 65%, 
+        rgba(0, 242, 254, 0.02) 90%, 
+        transparent 100%
+      );
+      clip-path: polygon(46% 0%, 54% 0%, 98% 100%, 2% 100%);
+      pointer-events: none;
+      filter: blur(8px);
+      opacity: 0.88;
+      transition: opacity 0.5s ease;
+      animation: beamSubtleFlicker 6s infinite ease-in-out;
+    }
+
+    /* 射束放射狀光束 (God Rays) */
+    .volumetric-god-rays {
+      position: absolute;
+      top: 42px;
+      width: 520px;
+      height: 560px;
+      clip-path: polygon(46% 0%, 54% 0%, 98% 100%, 2% 100%);
+      background-image: repeating-linear-gradient(
+        -80deg,
+        rgba(255, 255, 255, 0.08) 0px,
+        rgba(255, 255, 255, 0.08) 6px,
+        transparent 6px,
+        transparent 28px
+      );
+      pointer-events: none;
+      mix-blend-mode: screen;
+      opacity: 0.7;
+      animation: rayShift 8s infinite alternate ease-in-out;
+    }
+
+    @keyframes rayShift {
+      0% { transform: scaleX(1); opacity: 0.5; }
+      100% { transform: scaleX(1.05); opacity: 0.8; }
+    }
+
+    /* 雷射光學垂直掃描光刀 */
+    .beam-laser-scanner {
+      position: absolute;
+      top: 42px;
+      width: 500px;
+      height: 18px;
+      background: linear-gradient(180deg, 
+        transparent 0%, 
+        rgba(0, 242, 254, 0.45) 50%, 
+        #ffffff 80%, 
+        rgba(0, 242, 254, 0.45) 90%, 
+        transparent 100%
+      );
+      clip-path: polygon(44% 0%, 56% 0%, 98% 100%, 2% 100%);
+      box-shadow: 0 0 15px #00f2fe;
+      opacity: 0.75;
+      animation: scanLaserCycle 3.5s infinite linear;
+    }
+
+    @keyframes scanLaserCycle {
+      0% { top: 42px; opacity: 0; }
+      15% { opacity: 0.8; }
+      85% { opacity: 0.8; }
+      100% { top: 480px; opacity: 0; }
+    }
+
+    @keyframes beamSubtleFlicker {
+      0%, 100% { opacity: 0.88; }
+      24% { opacity: 0.85; }
+      25% { opacity: 0.72; }
+      26% { opacity: 0.88; }
+      68% { opacity: 0.92; }
+      69% { opacity: 0.78; }
+      70% { opacity: 0.88; }
+    }
+
+    /* 懸浮全息投影驗證 HUD (底部受頂部光錐照射具光學反光) */
+    .hologram-hud {
+      position: absolute;
+      z-index: 26;
+      width: 390px;
+      padding: 30px 26px 24px;
+      background: rgba(6, 22, 40, 0.72);
+      border: 1.5px solid rgba(0, 242, 254, 0.75);
+      border-top: 2.5px solid #ffffff;
+      border-radius: 14px;
+      box-shadow: 
+        0 -10px 40px rgba(0, 242, 254, 0.65),
+        0 0 45px rgba(0, 242, 254, 0.4),
+        inset 0 10px 25px rgba(255, 255, 255, 0.25),
+        inset 0 0 25px rgba(0, 242, 254, 0.22),
+        0 25px 60px rgba(0, 0, 0, 0.9);
+      backdrop-filter: blur(14px);
+      color: #38bdf8;
+      transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1), transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .hologram-hud::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 14px;
+      background: linear-gradient(
+        rgba(0, 242, 254, 0) 50%,
+        rgba(0, 242, 254, 0.1) 50%
+      );
+      background-size: 100% 4px;
+      pointer-events: none;
+      opacity: 0.9;
+    }
+
+    .hud-bracket {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-color: #00f2fe;
+      border-style: solid;
+      pointer-events: none;
+    }
+    .hb-tl { top: -2px; left: -2px; border-width: 3px 0 0 3px; border-top-left-radius: 6px; }
+    .hb-tr { top: -2px; right: -2px; border-width: 3px 3px 0 0; border-top-right-radius: 6px; }
+    .hb-bl { bottom: -2px; left: -2px; border-width: 0 0 3px 3px; border-bottom-left-radius: 6px; }
+    .hb-br { bottom: -2px; right: -2px; border-width: 0 3px 3px 0; border-bottom-right-radius: 6px; }
+
+    /* 開門時全息淡出消散收起 */
+    .hologram-hud.dismiss {
+      opacity: 0;
+      transform: scale(0.75) translateY(-25px);
+      pointer-events: none;
+    }
+
+    .hud-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .hud-header .sub {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 4px;
+      color: #67e8f9;
+      opacity: 0.85;
+      margin-bottom: 4px;
+    }
+    .hud-header .title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 17px;
+      letter-spacing: 3.5px;
+      font-weight: 900;
+      color: #a5f3fc;
+      text-shadow: 0 0 16px rgba(0, 242, 254, 0.9);
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+    .form-group label {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      color: #94a3b8;
+      letter-spacing: 1.5px;
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(8, 24, 46, 0.9);
+      border: 1px solid rgba(0, 242, 254, 0.45);
+      color: #ffffff;
+      border-radius: 6px;
+      outline: none;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 14px;
+      letter-spacing: 1.5px;
+      transition: all 0.25s;
+    }
+    .form-group input:focus {
+      border-color: #00f2fe;
+      background: rgba(10, 32, 60, 0.95);
+      box-shadow: 0 0 16px rgba(0, 242, 254, 0.65);
+    }
+
+    .btn-cluster {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .btn {
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+    .btn-submit {
+      background: linear-gradient(90deg, #00f2fe 0%, #0284c7 100%);
+      color: #020617;
+      font-size: 15px;
+      text-transform: uppercase;
+      box-shadow: 0 0 22px rgba(0, 242, 254, 0.6);
+    }
+    .btn-submit:hover {
+      background: linear-gradient(90deg, #38bdf8 0%, #22d3ee 100%);
+      box-shadow: 0 0 32px rgba(0, 242, 254, 0.95);
+      transform: translateY(-1px);
+    }
+
+    .quick-bar {
+      display: flex;
+      gap: 8px;
+    }
+    .btn-chip {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.08);
+      color: #cbd5e1;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      font-size: 11px;
+      padding: 8px;
+    }
+    .btn-chip:hover {
+      background: rgba(0, 242, 254, 0.18);
+      color: #ffffff;
+      border-color: rgba(0, 242, 254, 0.6);
+    }
+
+    .hud-status-text {
+      text-align: center;
+      margin-top: 10px;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      min-height: 16px;
+      color: #64748b;
+      letter-spacing: 1px;
+      transition: color 0.3s;
+    }
+    .hud-status-text.error {
+      color: #f87171;
+      text-shadow: 0 0 10px rgba(248, 113, 113, 0.8);
+    }
+    .hud-status-text.success {
+      color: #4ade80;
+      text-shadow: 0 0 10px rgba(74, 222, 128, 0.8);
+    }
+
+    /* ========================================================
+       5. 閉門重置列 (全開後浮現於底端)
+       ======================================================== */
+    .reclose-bar {
+      position: absolute;
+      bottom: 30px;
+      z-index: 30;
+      display: none;
+      animation: recloseFade 0.6s ease forwards;
+    }
+    .reclose-bar button {
+      background: rgba(15, 23, 42, 0.92);
+      color: #38bdf8;
+      border: 1.5px solid #00f2fe;
+      padding: 11px 32px;
+      font-size: 14px;
+      letter-spacing: 2px;
+      border-radius: 24px;
+      cursor: pointer;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.5), inset 0 0 12px rgba(0, 242, 254, 0.25);
+      transition: all 0.25s;
+    }
+    .reclose-bar button:hover {
+      background: #0284c7;
+      color: #ffffff;
+      box-shadow: 0 0 45px rgba(0, 242, 254, 0.95);
+      transform: scale(1.05);
+    }
+
+    @keyframes recloseFade {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="portal-stage" id="stage">
+  <!-- 1. 底層：純淨 8K 深空銀河全景 (地球、拉遠之月球、火星一體成型，絕對零重影、零錯位) -->
+  <div class="deep-space-panorama" id="deepSpaceBg"></div>
+  <div class="starlight-twinkle-layer"></div>
+
+  <!-- 深空遙測訊號 -->
+  <div class="space-telemetry">
+    AIRLOCK PROTOCOL: SC-MODULE-09 // STATION: LEO GATE<br>
+    CELESTIAL VIEW: REAL-TIME EARTH, LUNA & MARS ALIGNMENT<br>
+    CABIN PRESSURE: 101.3 KPA // HERMETIC SEAL VERIFIED
+  </div>
+
+  <!-- 2. 中層：依參考圖 1:1 打造的重裝甲星際艙門 (左右對開) -->
+  <div class="blast-door-wrapper">
+    <!-- 左門扇 -->
+    <div class="door-half door-half-left">
+      <!-- 頂部吊掛機械支架的青藍霓虹燈條 -->
+      <div class="neon-bracket-light"></div>
+      <!-- 側柱散熱模組發光霓虹燈條 -->
+      <div class="neon-pillar-strip neon-pillar-strip-1"></div>
+      <div class="neon-pillar-strip neon-pillar-strip-2"></div>
+      <div class="neon-pillar-strip neon-pillar-strip-3"></div>
+      <!-- 門板中央鎖柱發光霓虹燈條 -->
+      <div class="neon-door-lock-strip"></div>
+    </div>
+
+    <!-- 右門扇 -->
+    <div class="door-half door-half-right">
+      <!-- 頂部吊掛機械支架的青藍霓虹燈條 -->
+      <div class="neon-bracket-light"></div>
+      <!-- 側柱散熱模組發光霓虹燈條 -->
+      <div class="neon-pillar-strip neon-pillar-strip-1"></div>
+      <div class="neon-pillar-strip neon-pillar-strip-2"></div>
+      <div class="neon-pillar-strip neon-pillar-strip-3"></div>
+      <!-- 門板中央鎖柱發光霓虹燈條 -->
+      <div class="neon-door-lock-strip"></div>
+    </div>
+  </div>
+
+  <!-- 門頂指示燈組 (固定於天花板中心) -->
+  <div class="airlock-status-beacon">
+    <div class="beacon-lamp red" id="lampRed"></div>
+    <div class="beacon-lamp green" id="lampGreen"></div>
+  </div>
+
+  <!-- 開門洩壓白霧蒸氣畫布 -->
+  <canvas id="steamCanvas"></canvas>
+
+  <!-- 3. 頂部擬真實體全息投影燈組 (開門時自動收合縮回天花板) -->
+  <div class="projector-assembly" id="projectorAssembly">
+    <div class="projector-mount">
+      <div class="projector-label">COHERENT OPTICAL EMITTER // PROJ-04</div>
+      <div class="projector-lens-box">
+        <div class="lens-emitter-core"></div>
+        <div class="anamorphic-flare-line"></div>
+      </div>
+    </div>
+
+    <!-- 體積光錐、散射光柱與雷射垂直掃描刀 -->
+    <div class="volumetric-beam-cone"></div>
+    <div class="volumetric-god-rays"></div>
+    <div class="beam-laser-scanner"></div>
+  </div>
+
+  <!-- 4. 懸浮全息投影驗證 HUD 面板 -->
+  <div class="hologram-hud" id="holoHud">
+    <div class="hud-bracket hb-tl"></div>
+    <div class="hud-bracket hb-tr"></div>
+    <div class="hud-bracket hb-bl"></div>
+    <div class="hud-bracket hb-br"></div>
+
+    <div class="hud-header">
+      <div class="sub">CYBERNETIC AIRLOCK ACCESS</div>
+      <div class="title">艙門安全憑證認證</div>
+    </div>
+
+    <div class="form-group">
+      <label><span>SECURITY ID</span><span>[OPERATOR]</span></label>
+      <input type="text" id="userInput" placeholder="請輸入帳號" autocomplete="off">
+    </div>
+
+    <div class="form-group">
+      <label><span>ACCESS PASSCODE</span><span>[ENCRYPTED]</span></label>
+      <input type="password" id="passInput" placeholder="請輸入密碼" autocomplete="off">
+    </div>
+
+    <div class="btn-cluster">
+      <button class="btn btn-submit" onclick="handleAuth()">驗證憑證並全開艙門</button>
+      <div class="quick-bar">
+        <button class="btn btn-chip" onclick="autoFill('commander', 'earth-2026')">帶入授權憑證</button>
+        <button class="btn btn-chip" onclick="autoFill('intruder', 'wrong-pass')">帶入錯誤憑證</button>
+      </div>
+    </div>
+
+    <div class="hud-status-text" id="hudStatus">AWAITING CREDENTIALS...</div>
+  </div>
+
+  <!-- 5. 閉門重置列 (全開後浮現於底端) -->
+  <div class="reclose-bar" id="recloseBar">
+    <button onclick="handleReclose()">⟲ 重新關閉並鎖定艙門</button>
+  </div>
+</div>
+
+<script>
+  /* ====================================================================
+     A. 授權常數與節點引用
+     ==================================================================== */
+  const AUTH_USER = "commander";
+  const AUTH_PASS = "earth-2026";
+
+  const stage = document.getElementById("stage");
+  const lampRed = document.getElementById("lampRed");
+  const lampGreen = document.getElementById("lampGreen");
+  const holoHud = document.getElementById("holoHud");
+  const projectorAssembly = document.getElementById("projectorAssembly");
+  const recloseBar = document.getElementById("recloseBar");
+  const userInput = document.getElementById("userInput");
+  const passInput = document.getElementById("passInput");
+  const hudStatus = document.getElementById("hudStatus");
+
+  /* ====================================================================
+     B. Web Audio API 科幻音效合成 (氣密閥洩壓、全息操作與艙門機械聲)
+     ==================================================================== */
+  let audioCtx = null;
+  function getAudioCtx() {
+    if (!audioCtx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) audioCtx = new AC();
+    }
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+
+  function playTone(freq, type, duration, delay = 0, gainVal = 0.12) {
+    try {
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      setTimeout(() => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        gain.gain.setValueAtTime(gainVal, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      }, delay * 1000);
+    } catch(e) {}
+  }
+
+  function playDecompressionSound() {
+    try {
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const bufferSize = ctx.sampleRate * 1.5;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(900, ctx.currentTime);
+      filter.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 1.4);
+
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.35, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 1.4);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+      noise.start();
+    } catch (e) {}
+  }
+
+  function playSuccessSound() {
+    playTone(523.25, 'sine', 0.25, 0.0, 0.15); // C5
+    playTone(659.25, 'sine', 0.3, 0.12, 0.15);  // E5
+    playTone(783.99, 'sine', 0.45, 0.24, 0.18); // G5
+  }
+
+  function playAlarmSound() {
+    playTone(220, 'sawtooth', 0.18, 0, 0.16);
+    playTone(180, 'sawtooth', 0.22, 0.16, 0.16);
+  }
+
+  /* ====================================================================
+     C. 開門瞬間的氣密洩壓白霧蒸氣 (Steam Burst Canvas)
+     ==================================================================== */
+  const steamCanvas = document.getElementById("steamCanvas");
+  const sCtx = steamCanvas.getContext("2d");
+  let steamParticles = [];
+
+  function resizeSteamCanvas() {
+    steamCanvas.width = window.innerWidth;
+    steamCanvas.height = window.innerHeight;
+  }
+  window.addEventListener("resize", resizeSteamCanvas);
+  resizeSteamCanvas();
+
+  function triggerSteamJets() {
+    steamParticles = [];
+    const centerX = steamCanvas.width / 2;
+    const h = steamCanvas.height;
+
+    for (let i = 0; i < 150; i++) {
+      const y = Math.random() * (h * 0.7) + (h * 0.15);
+      const speed = (Math.random() * 9 + 4) * (Math.random() > 0.5 ? 1 : -1);
+      steamParticles.push({
+        x: centerX + (Math.random() * 8 - 4),
+        y: y,
+        vx: speed,
+        vy: (Math.random() - 0.5) * 2,
+        radius: Math.random() * 18 + 8,
+        alpha: Math.random() * 0.75 + 0.25,
+        life: 1.0,
+        decay: Math.random() * 0.02 + 0.015
+      });
+    }
+  }
+
+  function updateSteam() {
+    sCtx.clearRect(0, 0, steamCanvas.width, steamCanvas.height);
+    for (let i = steamParticles.length - 1; i >= 0; i--) {
+      const p = steamParticles[i];
+      p.x += p.vx;
+      p.y += p.vy;
+      p.radius += 1.1;
+      p.life -= p.decay;
+
+      if (p.life <= 0) {
+        steamParticles.splice(i, 1);
+        continue;
+      }
+
+      const grad = sCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+      grad.addColorStop(0, `rgba(224, 242, 254, ${p.alpha * p.life})`);
+      grad.addColorStop(0.5, `rgba(186, 230, 253, ${p.alpha * p.life * 0.4})`);
+      grad.addColorStop(1, 'rgba(186, 230, 253, 0)');
+
+      sCtx.fillStyle = grad;
+      sCtx.beginPath();
+      sCtx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+      sCtx.fill();
+    }
+    requestAnimationFrame(updateSteam);
+  }
+  updateSteam();
+
+  /* ====================================================================
+     D. 互動控制與艙門開閉邏輯 (嚴格符合物理與機械邏輯)
+     ==================================================================== */
+  function autoFill(u, p) {
+    userInput.value = u;
+    passInput.value = p;
+    playTone(440, 'sine', 0.08);
+    hudStatus.className = "hud-status-text";
+    hudStatus.textContent = "CREDENTIALS LOADED";
+  }
+
+  function handleAuth() {
+    const u = userInput.value.trim();
+    const p = passInput.value.trim();
+
+    lampRed.className = "beacon-lamp red";
+    lampGreen.className = "beacon-lamp green";
+
+    if (u === AUTH_USER && p === AUTH_PASS) {
+      // 1. 驗證成功：綠燈常亮、音效
+      lampGreen.classList.add("active-on");
+      hudStatus.className = "hud-status-text success";
+      hudStatus.textContent = "ACCESS GRANTED // RETRACTING PROJECTOR";
+      playSuccessSound();
+
+      // 2. 嚴格符合邏輯：開門前全息 HUD 消散，整座投影燈具與光束完全縮回天花板收納槽！
+      holoHud.classList.add("dismiss");
+      projectorAssembly.classList.add("retracted");
+
+      // 3. 噴射白霧氣爆
+      setTimeout(() => {
+        triggerSteamJets();
+        playDecompressionSound();
+      }, 300);
+
+      // 4. 裝甲門 100% 完全滑移全開至兩側視野之外，純淨直視原版固定的地球、月球與火星
+      setTimeout(() => {
+        stage.classList.add("doors-open");
+        recloseBar.style.display = "block";
+      }, 500);
+
+    } else {
+      // 驗證失敗：急促紅燈閃爍、警告音
+      lampRed.classList.add("alarm-strobe");
+      hudStatus.className = "hud-status-text error";
+      hudStatus.textContent = "ACCESS DENIED // PASSCODE INVALID";
+      playAlarmSound();
+
+      setTimeout(() => {
+        lampRed.classList.remove("alarm-strobe");
+        hudStatus.className = "hud-status-text";
+        hudStatus.textContent = "AWAITING CREDENTIALS...";
+      }, 2000);
+    }
+  }
+
+  function handleReclose() {
+    stage.classList.remove("doors-open");
+    lampGreen.className = "beacon-lamp green";
+    recloseBar.style.display = "none";
+    hudStatus.className = "hud-status-text";
+    hudStatus.textContent = "SEALING AIRLOCK...";
+
+    playTone(330, 'sine', 0.25, 0);
+
+    // 艙門合攏鎖死後，天花板投影儀重新滑出降下，並向下射出光束投射全息 HUD
+    setTimeout(() => {
+      projectorAssembly.classList.remove("retracted");
+      setTimeout(() => {
+        holoHud.classList.remove("dismiss");
+        hudStatus.textContent = "AWAITING CREDENTIALS...";
+        playTone(660, 'sine', 0.15, 0.1);
+      }, 400);
+    }, 1500);
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !holoHud.classList.contains("dismiss")) {
+      handleAuth();
+    }
+  });
+</script>
+
+</body>
+</html>
