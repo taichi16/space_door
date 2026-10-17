@@ -830,6 +830,146 @@
     }
 
     /* ========================================================
+       門框一體化實體「開」按鈕 (Integrated Bulkhead "開" Switch)
+       與門框金屬裝甲完全融合，精確定位於右側門框專屬按鍵槽
+       ======================================================== */
+    .door-integrated-kai-btn {
+      position: absolute;
+      left: 93.43%;
+      top: 46.74%;
+      transform: translate(-50%, -50%);
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: transparent;
+      border: 1.5px solid rgba(0, 242, 254, 0.45);
+      outline: none;
+      cursor: pointer;
+      pointer-events: auto;
+      z-index: 22;
+      box-shadow: 
+        0 0 12px rgba(0, 242, 254, 0.35),
+        inset 0 0 10px rgba(0, 242, 254, 0.25);
+      transition: transform 0.12s cubic-bezier(0.2, 0, 0, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .kai-lens-glow {
+      position: absolute;
+      inset: 2px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 45% 45%, rgba(0, 242, 254, 0.25) 0%, rgba(0, 242, 254, 0.05) 60%, transparent 80%);
+      pointer-events: none;
+      transition: all 0.25s ease;
+    }
+
+    .kai-press-ring {
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px dashed rgba(0, 242, 254, 0.3);
+      pointer-events: none;
+      animation: ringSlowRotate 20s linear infinite;
+    }
+
+    @keyframes ringSlowRotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* 懸浮效果：微光增強，透鏡發亮 */
+    .door-integrated-kai-btn:hover {
+      border-color: #00f2fe;
+      box-shadow: 
+        0 0 24px rgba(0, 242, 254, 0.85),
+        0 0 45px rgba(0, 242, 254, 0.4),
+        inset 0 0 18px rgba(0, 242, 254, 0.6);
+      transform: translate(-50%, -50%) scale(1.06);
+    }
+    .door-integrated-kai-btn:hover .kai-lens-glow {
+      background: radial-gradient(circle at 45% 45%, rgba(0, 242, 254, 0.5) 0%, rgba(0, 242, 254, 0.18) 70%, transparent 90%);
+    }
+
+    /* 點擊按下：逼真鍵程下陷 */
+    .door-integrated-kai-btn:active,
+    .door-integrated-kai-btn.pressed {
+      transform: translate(-50%, -50%) scale(0.92);
+      border-color: #ffffff;
+      box-shadow: 
+        inset 0 4px 14px rgba(0, 0, 0, 0.9),
+        0 0 15px rgba(0, 242, 254, 0.9);
+    }
+
+    /* 收起投影時：柔和呼吸提示 */
+    .door-integrated-kai-btn.pulse-ready {
+      animation: kaiIntegratedBreathe 2.4s infinite alternate ease-in-out;
+    }
+
+    @keyframes kaiIntegratedBreathe {
+      0% {
+        border-color: rgba(0, 242, 254, 0.3);
+        box-shadow: 0 0 8px rgba(0, 242, 254, 0.2), inset 0 0 6px rgba(0, 242, 254, 0.15);
+      }
+      100% {
+        border-color: rgba(0, 242, 254, 0.85);
+        box-shadow: 0 0 20px rgba(0, 242, 254, 0.75), inset 0 0 14px rgba(0, 242, 254, 0.4);
+      }
+    }
+
+    /* 懸浮微型 HUD 提示標籤 */
+    .kai-hud-tag {
+      position: absolute;
+      bottom: -22px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 9px;
+      letter-spacing: 2px;
+      color: #a5f3fc;
+      background: rgba(8, 24, 46, 0.85);
+      border: 1px solid rgba(0, 242, 254, 0.4);
+      padding: 2px 7px;
+      border-radius: 4px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      text-shadow: 0 0 8px rgba(0, 242, 254, 0.8);
+    }
+    .door-integrated-kai-btn:hover .kai-hud-tag {
+      opacity: 1;
+      transform: translateX(-50%) translateY(2px);
+    }
+
+    /* HUD 頂部小關閉/收回按鈕 */
+    .hud-close-btn {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(0, 242, 254, 0.35);
+      color: #67e8f9;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      transition: all 0.2s;
+      z-index: 5;
+    }
+    .hud-close-btn:hover {
+      background: rgba(244, 63, 94, 0.25);
+      border-color: #f43f5e;
+      color: #f43f5e;
+      box-shadow: 0 0 10px rgba(244, 63, 94, 0.6);
+    }
+
+    /* ========================================================
        5. 閉門重置列 (全開後浮現於底端)
        ======================================================== */
     .reclose-bar {
@@ -1127,6 +1267,13 @@
       <div class="neon-pillar-strip neon-pillar-strip-2 right"></div>
       <div class="neon-pillar-strip neon-pillar-strip-3 right"></div>
     </div>
+
+    <!-- 門框一體化實體「開」按鈕 (與門框金屬裝甲完全融合，精確對位門框專屬按鍵槽) -->
+    <button class="door-integrated-kai-btn pulse-ready" id="btnKai" onclick="handleKaiButtonClick()" title="按下門框按鈕：展開全息帳密認證">
+      <span class="kai-lens-glow"></span>
+      <span class="kai-press-ring"></span>
+      <span class="kai-hud-tag">手動開門 MANUAL</span>
+    </button>
   </div>
 
   <!-- 門頂指示燈組 (固定於天花板中心，絕不被投影儀遮蔽) -->
@@ -1145,8 +1292,8 @@
   <!-- 開門洩壓白霧蒸氣畫布 -->
   <canvas id="steamCanvas"></canvas>
 
-  <!-- 3. 頂部擬真實體全息投影燈組 (開門時自動收合縮回天花板) -->
-  <div class="projector-assembly" id="projectorAssembly">
+  <!-- 3. 頂部擬真實體全息投影燈組 (預設收起，載入延遲1秒後滑出) -->
+  <div class="projector-assembly retracted" id="projectorAssembly">
     <div class="projector-mount">
       <div class="projector-label">COHERENT OPTICAL EMITTER // PROJ-04</div>
       <div class="projector-lens-box">
@@ -1161,8 +1308,9 @@
     <div class="beam-laser-scanner"></div>
   </div>
 
-  <!-- 4. 懸浮全息投影驗證 HUD 面板 -->
-  <div class="hologram-hud" id="holoHud">
+  <!-- 4. 懸浮全息投影驗證 HUD 面板 (預設隱藏，載入延遲1秒後投影) -->
+  <div class="hologram-hud dismiss" id="holoHud">
+    <button class="hud-close-btn" onclick="hideHoloProjection()" title="收回全息投影 (檢視大門全貌)">✕</button>
     <div class="hud-bracket hb-tl"></div>
     <div class="hud-bracket hb-tr"></div>
     <div class="hud-bracket hb-bl"></div>
@@ -1409,6 +1557,7 @@
       // 2. 嚴格符合邏輯：開門前全息 HUD 消散，整座投影燈具與光束完全縮回天花板收納槽！
       holoHud.classList.add("dismiss");
       projectorAssembly.classList.add("retracted");
+      if (btnKai) btnKai.classList.remove("pulse-ready");
 
       // 3. 噴射白霧氣爆
       setTimeout(() => {
@@ -1487,14 +1636,70 @@
       if (hudStatusBar) hudStatusBar.className = "hud-status-bar";
       holoHud.classList.remove("alarm-shake");
 
-      projectorAssembly.classList.remove("retracted");
-      setTimeout(() => {
-        holoHud.classList.remove("dismiss");
-        hudStatus.textContent = "AWAITING CREDENTIALS...";
-        playTone(660, 'sine', 0.15, 0.1);
-      }, 400);
+      showHoloProjection();
     }, 3800);
   }
+
+  /* ====================================================================
+     門框實體「開」按鈕：全息投影控制 (延遲載入、手動投影與 HUD 收回)
+     ==================================================================== */
+  const btnKai = document.getElementById("btnKai");
+
+  function playMechanicalSwitchSound() {
+    playTone(160, 'sawtooth', 0.06, 0.0, 0.2);
+    playTone(90, 'sine', 0.12, 0.02, 0.28);
+    playTone(1600, 'sine', 0.04, 0.01, 0.12);
+  }
+
+  function handleKaiButtonClick() {
+    // 逼真物理按壓聲音與觸覺回饋
+    playMechanicalSwitchSound();
+
+    if (btnKai) {
+      btnKai.classList.add("pressed");
+      setTimeout(() => btnKai.classList.remove("pressed"), 180);
+    }
+
+    // 觸發全息投影輸入
+    showHoloProjection();
+  }
+
+  function showHoloProjection() {
+    if (stage.classList.contains("doors-sliding") || stage.classList.contains("camera-dolly-in")) {
+      return; // 艙門已開啟或處於推進狀態不開啟全息
+    }
+
+    projectorAssembly.classList.remove("retracted");
+
+    setTimeout(() => {
+      holoHud.classList.remove("dismiss");
+      if (btnKai) {
+        btnKai.classList.remove("pulse-ready");
+      }
+      playTone(660, 'sine', 0.15, 0.05);
+      playTone(880, 'sine', 0.18, 0.15);
+      if (userInput) userInput.focus();
+    }, 350);
+  }
+
+  function hideHoloProjection() {
+    holoHud.classList.add("dismiss");
+    projectorAssembly.classList.add("retracted");
+
+    if (btnKai) {
+      btnKai.classList.add("pulse-ready");
+    }
+
+    playTone(440, 'sine', 0.12, 0.0);
+    playTone(330, 'sine', 0.18, 0.08);
+  }
+
+  // 網頁載入時：延遲 1 秒 (1000ms) 後自動投影輸入帳號密碼
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      showHoloProjection();
+    }, 1000);
+  });
 
   /* ====================================================================
      E. 深空天體鎖定與互動 (月球：案件管理系統 / 地球：報告產生器)
