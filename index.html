@@ -860,9 +860,198 @@
       transform: scale(1.05);
     }
 
-    @keyframes recloseFade {
-      from { opacity: 0; transform: translateY(18px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* ========================================================
+       6. 深空天體互動目標層 (月球：案件管理系統 / 地球：報告產生器)
+       ======================================================== */
+    .celestial-targets-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 22;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    /* 僅在開門推進視野進入深空後啟用互動 */
+    .camera-dolly-in .celestial-targets-layer {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .planet-target-hotspot {
+      position: absolute;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transform: translate(-50%, -50%);
+      transition: transform 0.25s ease;
+    }
+
+    /* 地球目標熱區 (位置對齊 8K 深空地球盤面) */
+    .planet-target-hotspot.earth-target {
+      left: 11.2%;
+      top: 50.0%;
+      width: 24.5vw;
+      height: 24.5vw;
+      min-width: 220px;
+      min-height: 220px;
+      border-radius: 50%;
+    }
+
+    /* 月球目標熱區 (位置精確對齊示意圖月球盤面) */
+    .planet-target-hotspot.moon-target {
+      left: 35.3%;
+      top: 49.5%;
+      width: 11.6vw;
+      height: 11.6vw;
+      min-width: 115px;
+      min-height: 115px;
+      border-radius: 50%;
+    }
+
+    /* 懸浮科技感鎖定框線盒 (預設隱藏，Hover 時浮現閃爍框線) */
+    .target-reticle-box {
+      position: absolute;
+      inset: -6px;
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(1.08);
+      border: 1px dashed rgba(0, 242, 254, 0.3);
+      border-radius: 4px;
+      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .planet-target-hotspot:hover .target-reticle-box,
+    .planet-target-hotspot:focus .target-reticle-box {
+      opacity: 1;
+      transform: scale(1.0);
+    }
+
+    /* 科技感文字標籤 (位於框線上方，發光青藍文字) */
+    .reticle-label {
+      position: absolute;
+      bottom: calc(100% + 14px);
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'Share Tech Mono', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      color: #00f2fe;
+      white-space: nowrap;
+      text-shadow: 
+        0 0 10px rgba(0, 242, 254, 0.95),
+        0 0 22px rgba(0, 242, 254, 0.65),
+        0 2px 4px rgba(0, 0, 0, 0.9);
+      background: rgba(4, 13, 28, 0.88);
+      border: 1.5px solid rgba(0, 242, 254, 0.7);
+      padding: 5px 18px;
+      border-radius: 4px;
+      box-shadow: 
+        0 0 20px rgba(0, 242, 254, 0.4),
+        inset 0 0 12px rgba(0, 242, 254, 0.2);
+      backdrop-filter: blur(8px);
+      animation: reticleLabelPulse 1.8s infinite alternate ease-in-out;
+    }
+
+    /* 標籤下方連接指示小指標線 */
+    .reticle-label::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 2px;
+      height: 10px;
+      background: #00f2fe;
+      box-shadow: 0 0 8px #00f2fe;
+    }
+
+    /* 四個直角科技邊角 (Brackets) - 閃爍框線動畫 */
+    .reticle-bracket {
+      position: absolute;
+      width: 22px;
+      height: 22px;
+      border-color: #00f2fe;
+      border-style: solid;
+      pointer-events: none;
+      filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.95));
+      animation: reticleBracketStrobe 1.2s infinite alternate ease-in-out;
+    }
+
+    .rb-tl {
+      top: -2px;
+      left: -2px;
+      border-width: 3.5px 0 0 3.5px;
+    }
+    .rb-tr {
+      top: -2px;
+      right: -2px;
+      border-width: 3.5px 3.5px 0 0;
+    }
+    .rb-bl {
+      bottom: -2px;
+      left: -2px;
+      border-width: 0 0 3.5px 3.5px;
+    }
+    .rb-br {
+      bottom: -2px;
+      right: -2px;
+      border-width: 0 3.5px 3.5px 0;
+    }
+
+    /* 框內雷達掃描光刀 (Scan Line) */
+    .reticle-scan-line {
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, #00f2fe 30%, #ffffff 50%, #00f2fe 70%, transparent 100%);
+      box-shadow: 0 0 10px #00f2fe, 0 0 20px rgba(0, 242, 254, 0.8);
+      pointer-events: none;
+      animation: reticleScanMove 2.0s infinite ease-in-out;
+    }
+
+    /* 閃爍框線動畫 (科技感呼吸頻率) */
+    @keyframes reticleBracketStrobe {
+      0% {
+        opacity: 0.45;
+        filter: drop-shadow(0 0 4px rgba(0, 242, 254, 0.5));
+      }
+      50% {
+        opacity: 1;
+        filter: drop-shadow(0 0 18px rgba(0, 242, 254, 1));
+      }
+      100% {
+        opacity: 0.65;
+        filter: drop-shadow(0 0 8px rgba(0, 242, 254, 0.8));
+      }
+    }
+
+    @keyframes reticleLabelPulse {
+      0% {
+        border-color: rgba(0, 242, 254, 0.5);
+        box-shadow: 0 0 12px rgba(0, 242, 254, 0.3);
+      }
+      100% {
+        border-color: rgba(0, 242, 254, 1);
+        box-shadow: 0 0 28px rgba(0, 242, 254, 0.65);
+      }
+    }
+
+    @keyframes reticleScanMove {
+      0% {
+        top: 6%;
+        opacity: 0.15;
+      }
+      50% {
+        opacity: 0.9;
+      }
+      100% {
+        top: 94%;
+        opacity: 0.15;
+      }
     }
   </style>
 </head>
@@ -872,6 +1061,33 @@
   <!-- 1. 底層：純淨 8K 深空銀河全景 (地球、拉遠之月球、火星一體成型，絕對零重影、零錯位) -->
   <div class="deep-space-panorama" id="deepSpaceBg"></div>
   <div class="starlight-twinkle-layer"></div>
+
+  <!-- 深空天體互動目標層 (月球：案件管理系統 / 地球：報告產生器) -->
+  <div class="celestial-targets-layer" id="celestialTargets">
+    <!-- 地球目標熱區 (滑鼠移入時顯示閃爍框線與"報告產生器") -->
+    <div class="planet-target-hotspot earth-target" id="targetEarth" tabindex="0">
+      <div class="target-reticle-box">
+        <div class="reticle-label">報告產生器</div>
+        <div class="reticle-bracket rb-tl"></div>
+        <div class="reticle-bracket rb-tr"></div>
+        <div class="reticle-bracket rb-bl"></div>
+        <div class="reticle-bracket rb-br"></div>
+        <div class="reticle-scan-line"></div>
+      </div>
+    </div>
+
+    <!-- 月球目標熱區 (滑鼠移入時顯示閃爍框線與"案件管理系統") -->
+    <div class="planet-target-hotspot moon-target" id="targetMoon" tabindex="0">
+      <div class="target-reticle-box">
+        <div class="reticle-label">案件管理系統</div>
+        <div class="reticle-bracket rb-tl"></div>
+        <div class="reticle-bracket rb-tr"></div>
+        <div class="reticle-bracket rb-bl"></div>
+        <div class="reticle-bracket rb-br"></div>
+        <div class="reticle-scan-line"></div>
+      </div>
+    </div>
+  </div>
 
   <!-- 深空遙測訊號 -->
   <div class="space-telemetry">
@@ -1279,6 +1495,33 @@
       }, 400);
     }, 3800);
   }
+
+  /* ====================================================================
+     E. 深空天體鎖定與互動 (月球：案件管理系統 / 地球：報告產生器)
+     ==================================================================== */
+  const targetEarth = document.getElementById("targetEarth");
+  const targetMoon = document.getElementById("targetMoon");
+
+  function setupCelestialTargets() {
+    function bindTarget(el, name, freq) {
+      if (!el) return;
+      el.addEventListener("mouseenter", () => {
+        if (stage.classList.contains("camera-dolly-in")) {
+          playTone(freq, 'sine', 0.08, 0, 0.08);
+          playTone(freq * 1.4, 'sine', 0.12, 0.05, 0.06);
+        }
+      });
+      el.addEventListener("click", () => {
+        if (!stage.classList.contains("camera-dolly-in")) return;
+        playTone(523.25, 'sine', 0.15, 0, 0.15);
+        playTone(1046.5, 'sine', 0.35, 0.08, 0.18);
+      });
+    }
+
+    bindTarget(targetEarth, "報告產生器", 659.25);
+    bindTarget(targetMoon, "案件管理系統", 880.0);
+  }
+  setupCelestialTargets();
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Enter" && !holoHud.classList.contains("dismiss")) {
