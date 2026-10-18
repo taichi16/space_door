@@ -85,23 +85,23 @@
     }
 
     /* ========================================================
-       1. 底層：深空全景視口總成 (全幅無黑邊、居中平穩縮放、完整呈現地球/月球/火星)
+       1. 底層：深空全景視口總成 (滿版無黑邊、平穩縮放推進、天體像素級絕對鎖定)
        ======================================================== */
     .space-cosmos-rig {
       position: absolute;
-      inset: -4%;
-      width: 108%;
-      height: 108%;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
       z-index: 1;
-      transform-origin: 52% 50%;
+      transform-origin: 50% 50%;
       transform: scale(1.0);
       transition: transform 3.0s cubic-bezier(0.22, 1, 0.36, 1), filter 2.5s ease;
       will-change: transform;
     }
 
-    /* 出艙走入太空時：深空景象（地球、月球、火星）平穩推進顯著放大 (1.32x)，全程滿版無黑邊，三大天體完整同框！ */
+    /* 出艙走入太空時：深空景象（地球、月球、火星）平穩推進顯著放大 (1.24x)，三大天體完整同框，全程滿版無黑邊！ */
     .walking-out .space-cosmos-rig {
-      transform: scale(1.32);
+      transform: scale(1.24);
       filter: saturate(1.15) brightness(1.08);
     }
 
@@ -112,15 +112,25 @@
       transition: transform 2.8s cubic-bezier(0.22, 1, 0.36, 1), filter 2.4s ease;
     }
 
+    /* 深空星際畫布 (鎖定 1376:768 原圖比例，全屏 Cover 鋪滿，零變形零黑邊) */
+    .space-cosmos-plane {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: max(104vw, calc(104vh * (1376 / 768)));
+      height: max(104vh, calc(104vw * (768 / 1376)));
+      pointer-events: none;
+    }
+
     .deep-space-panorama {
       position: absolute;
       inset: 0;
       width: 100%;
       height: 100%;
       background-image: url('assets/deep_space.jpg');
-      background-size: cover;
-      background-position: center 50%;
-      animation: spaceSlowDrift 50s ease-in-out infinite alternate;
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
       filter: saturate(1.12) brightness(1.05);
     }
 
@@ -1093,36 +1103,30 @@
       transition: transform 0.25s ease;
     }
 
-    /* 地球目標熱區 (位置精確對齊 8K 深空地球盤面核心 x=17.4%, y=50.0%) */
+    /* 地球目標熱區 (位置精確對齊 8K 深空地球盤面核心 x=17.41%, y=49.93%) */
     .planet-target-hotspot.earth-target {
-      left: 17.4%;
-      top: 50.0%;
-      width: 25.5vw;
-      height: 25.5vw;
-      min-width: 230px;
-      min-height: 230px;
+      left: 17.41%;
+      top: 49.93%;
+      width: 27.5%;
+      height: 49.2%;
       border-radius: 50%;
     }
 
-    /* 月球目標熱區 (位置精確對齊 8K 深空月球盤面核心 x=39.2%, y=52.0%) */
+    /* 月球目標熱區 (位置精確對齊 8K 深空月球盤面核心 x=39.21%, y=52.02%) */
     .planet-target-hotspot.moon-target {
-      left: 39.2%;
-      top: 52.0%;
-      width: 10.8vw;
-      height: 10.8vw;
-      min-width: 105px;
-      min-height: 105px;
+      left: 39.21%;
+      top: 52.02%;
+      width: 10.5%;
+      height: 18.8%;
       border-radius: 50%;
     }
 
-    /* 火星目標熱區 (位置精確對齊深空火星盤面核心 x=85.5%, y=48.5%) */
+    /* 火星目標熱區 (位置精確對齊深空火星盤面核心 x=85.47%, y=48.50%) */
     .planet-target-hotspot.mars-target {
-      left: 85.5%;
-      top: 48.5%;
-      width: 14.5vw;
-      height: 14.5vw;
-      min-width: 140px;
-      min-height: 140px;
+      left: 85.47%;
+      top: 48.50%;
+      width: 14.2%;
+      height: 25.4%;
       border-radius: 50%;
     }
 
@@ -1283,44 +1287,47 @@
   </div>
   <!-- 1. 底層：深空全景視口總成 (第一人稱漫步時，深空景象真實放大／縮小) -->
   <div class="space-cosmos-rig" id="spaceCosmosRig">
-    <div class="deep-space-panorama" id="deepSpaceBg"></div>
-    <div class="starlight-twinkle-layer"></div>
+    <!-- 原圖比例 1376:768 星際畫布，天體與目標熱區 100% 絕對幾何綁定，永不偏位 -->
+    <div class="space-cosmos-plane" id="cosmosPlane">
+      <div class="deep-space-panorama" id="deepSpaceBg"></div>
+      <div class="starlight-twinkle-layer"></div>
 
-    <!-- 深空天體互動目標層 (月球：案件管理系統 / 地球：報告產生器) -->
-    <div class="celestial-targets-layer" id="celestialTargets">
-      <!-- 地球目標熱區 (滑鼠移入時顯示閃爍框線與"報告產生器") -->
-      <div class="planet-target-hotspot earth-target" id="targetEarth" tabindex="0">
-        <div class="target-reticle-box">
-          <div class="reticle-label">報告產生器</div>
-          <div class="reticle-bracket rb-tl"></div>
-          <div class="reticle-bracket rb-tr"></div>
-          <div class="reticle-bracket rb-bl"></div>
-          <div class="reticle-bracket rb-br"></div>
-          <div class="reticle-scan-line"></div>
+      <!-- 深空天體互動目標層 (月球：案件管理系統 / 地球：報告產生器 / 火星：火星觀測站) -->
+      <div class="celestial-targets-layer" id="celestialTargets">
+        <!-- 地球目標熱區 (滑鼠移入時顯示閃爍框線與"報告產生器") -->
+        <div class="planet-target-hotspot earth-target" id="targetEarth" tabindex="0">
+          <div class="target-reticle-box">
+            <div class="reticle-label">報告產生器</div>
+            <div class="reticle-bracket rb-tl"></div>
+            <div class="reticle-bracket rb-tr"></div>
+            <div class="reticle-bracket rb-bl"></div>
+            <div class="reticle-bracket rb-br"></div>
+            <div class="reticle-scan-line"></div>
+          </div>
         </div>
-      </div>
 
-      <!-- 月球目標熱區 (滑鼠移入時顯示閃爍框線與"案件管理系統") -->
-      <div class="planet-target-hotspot moon-target" id="targetMoon" tabindex="0">
-        <div class="target-reticle-box">
-          <div class="reticle-label">案件管理系統</div>
-          <div class="reticle-bracket rb-tl"></div>
-          <div class="reticle-bracket rb-tr"></div>
-          <div class="reticle-bracket rb-bl"></div>
-          <div class="reticle-bracket rb-br"></div>
-          <div class="reticle-scan-line"></div>
+        <!-- 月球目標熱區 (滑鼠移入時顯示閃爍框線與"案件管理系統") -->
+        <div class="planet-target-hotspot moon-target" id="targetMoon" tabindex="0">
+          <div class="target-reticle-box">
+            <div class="reticle-label">案件管理系統</div>
+            <div class="reticle-bracket rb-tl"></div>
+            <div class="reticle-bracket rb-tr"></div>
+            <div class="reticle-bracket rb-bl"></div>
+            <div class="reticle-bracket rb-br"></div>
+            <div class="reticle-scan-line"></div>
+          </div>
         </div>
-      </div>
 
-      <!-- 火星目標熱區 (滑鼠移入時顯示閃爍框線與"火星觀測站") -->
-      <div class="planet-target-hotspot mars-target" id="targetMars" tabindex="0">
-        <div class="target-reticle-box">
-          <div class="reticle-label">火星觀測站</div>
-          <div class="reticle-bracket rb-tl"></div>
-          <div class="reticle-bracket rb-tr"></div>
-          <div class="reticle-bracket rb-bl"></div>
-          <div class="reticle-bracket rb-br"></div>
-          <div class="reticle-scan-line"></div>
+        <!-- 火星目標熱區 (滑鼠移入時顯示閃爍框線與"火星觀測站") -->
+        <div class="planet-target-hotspot mars-target" id="targetMars" tabindex="0">
+          <div class="target-reticle-box">
+            <div class="reticle-label">火星觀測站</div>
+            <div class="reticle-bracket rb-tl"></div>
+            <div class="reticle-bracket rb-tr"></div>
+            <div class="reticle-bracket rb-bl"></div>
+            <div class="reticle-bracket rb-br"></div>
+            <div class="reticle-scan-line"></div>
+          </div>
         </div>
       </div>
     </div>
