@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>太空艙門入口 - 電影級擬真太空艙與深空全景</title>
+  <title>太空艙門 - 第一人稱出艙漫步版 (First-Person Spacewalk)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
@@ -35,7 +35,44 @@
       color: #f8fafc;
     }
 
-    /* 16:9 全螢幕舞台視口 */
+    /* 頂部 EVA 狀態列 */
+    .eva-top-hud {
+      position: absolute;
+      top: 18px;
+      right: 24px;
+      display: flex;
+      align-items: center;
+      z-index: 50;
+      pointer-events: none;
+    }
+    .eva-hud-badge {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      background: rgba(2, 6, 23, 0.88);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      padding: 7px 18px;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.85), inset 0 0 10px rgba(16, 185, 129, 0.15);
+      backdrop-filter: blur(8px);
+    }
+    .eva-status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 8px #10b981, 0 0 16px #10b981;
+      animation: alertStrobe 1.5s infinite alternate ease-in-out;
+    }
+    .eva-status-text {
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: #a7f3d0;
+      text-transform: uppercase;
+    }
+
+    /* 16:9 全螢幕舞台視口 (平穩無晃動) */
     .portal-stage {
       position: relative;
       width: 100vw;
@@ -48,17 +85,41 @@
     }
 
     /* ========================================================
-       1. 底層：純淨 8K 電影級擬真深空 (固定的地球、拉遠之月球與壯麗火星)
+       1. 底層：深空全景視口總成 (全幅無黑邊、居中平穩縮放、完整呈現地球/月球/火星)
        ======================================================== */
+    .space-cosmos-rig {
+      position: absolute;
+      inset: -4%;
+      width: 108%;
+      height: 108%;
+      z-index: 1;
+      transform-origin: 50% 50%;
+      transform: scale(1.0);
+      transition: transform 3.0s cubic-bezier(0.22, 1, 0.36, 1), filter 2.5s ease;
+      will-change: transform;
+    }
+
+    /* 出艙走入太空時：深空景象（地球、月球、火星）平穩推進放大 (1.14x)，全程滿版無黑邊，三顆天體全景完整在視野內！ */
+    .walking-out .space-cosmos-rig {
+      transform: scale(1.14);
+      filter: saturate(1.15) brightness(1.08);
+    }
+
+    /* 退回艙內時：深空景象平穩縮小回歸艙內標準全景視角 (1.0x)，全程滿版零黑邊 */
+    .walking-back .space-cosmos-rig {
+      transform: scale(1.0);
+      filter: saturate(1.12) brightness(1.05);
+      transition: transform 2.8s cubic-bezier(0.22, 1, 0.36, 1), filter 2.4s ease;
+    }
+
     .deep-space-panorama {
       position: absolute;
-      inset: -2%;
-      width: 104%;
-      height: 104%;
+      inset: 0;
+      width: 100%;
+      height: 100%;
       background-image: url('assets/deep_space.jpg');
       background-size: cover;
       background-position: center 50%;
-      z-index: 1;
       animation: spaceSlowDrift 50s ease-in-out infinite alternate;
       filter: saturate(1.12) brightness(1.05);
     }
@@ -112,7 +173,7 @@
     }
 
     /* ========================================================
-       2. 中層：星際氣密艙門總成 (固定外門框 + 內部左右滑動門板)
+       2. 中層：星際氣密艙門總成 (平穩對稱放大掠過視野，零傾斜零晃動)
        ======================================================== */
     .airlock-chamber {
       position: absolute;
@@ -120,20 +181,24 @@
       z-index: 10;
       pointer-events: none;
       overflow: hidden;
-      transform-origin: 50% 52%;
-      transition: transform 2.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 1.8s ease-in-out;
+      transform-origin: 50% 50%;
+      transform: scale(1.0);
+      transition: transform 3.0s cubic-bezier(0.22, 1, 0.36, 1), opacity 2.2s ease-in-out;
+      will-change: transform, opacity;
     }
 
-    /* 視角往門外推進：艙門總成向前縮放穿過鏡頭 (Camera Dolly Forward Into Deep Space) */
-    .camera-dolly-in .airlock-chamber {
-      transform: scale(3.2);
+    /* 走出艙門進入深空：門框向四周鏡頭邊緣平穩擴展退出視野 (平穩無晃動) */
+    .walking-out .airlock-chamber {
+      transform: scale(3.0);
       opacity: 0;
       pointer-events: none;
     }
 
-    /* 推進時深空星系微幅視差縮放 */
-    .camera-dolly-in .deep-space-panorama {
-      transform: scale(1.08);
+    /* 從深空退回艙內：門框四周平穩歸位 */
+    .walking-back .airlock-chamber {
+      transform: scale(1.0);
+      opacity: 1;
+      transition: transform 2.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 2.0s ease-in-out;
     }
 
     /* ========================================================
@@ -1012,8 +1077,8 @@
       transition: opacity 0.8s ease;
     }
 
-    /* 僅在開門推進視野進入深空後啟用互動 */
-    .camera-dolly-in .celestial-targets-layer {
+    /* 步出艙門進入深空後啟用互動 (與深空一同放大) */
+    .walking-out .celestial-targets-layer {
       opacity: 1;
       pointer-events: auto;
     }
@@ -1047,6 +1112,17 @@
       height: 11.6vw;
       min-width: 115px;
       min-height: 115px;
+      border-radius: 50%;
+    }
+
+    /* 火星目標熱區 (位置精確對齊深空火星盤面 x=81.5%, y=44%) */
+    .planet-target-hotspot.mars-target {
+      left: 81.5%;
+      top: 44.0%;
+      width: 20vw;
+      height: 20vw;
+      min-width: 180px;
+      min-height: 180px;
       border-radius: 50%;
     }
 
@@ -1198,33 +1274,54 @@
 <body>
 
 <div class="portal-stage" id="stage">
-  <!-- 1. 底層：純淨 8K 深空銀河全景 (地球、拉遠之月球、火星一體成型，絕對零重影、零錯位) -->
-  <div class="deep-space-panorama" id="deepSpaceBg"></div>
-  <div class="starlight-twinkle-layer"></div>
-
-  <!-- 深空天體互動目標層 (月球：案件管理系統 / 地球：報告產生器) -->
-  <div class="celestial-targets-layer" id="celestialTargets">
-    <!-- 地球目標熱區 (滑鼠移入時顯示閃爍框線與"報告產生器") -->
-    <div class="planet-target-hotspot earth-target" id="targetEarth" tabindex="0">
-      <div class="target-reticle-box">
-        <div class="reticle-label">報告產生器</div>
-        <div class="reticle-bracket rb-tl"></div>
-        <div class="reticle-bracket rb-tr"></div>
-        <div class="reticle-bracket rb-bl"></div>
-        <div class="reticle-bracket rb-br"></div>
-        <div class="reticle-scan-line"></div>
-      </div>
+  <!-- 頂部 EVA 狀態列 -->
+  <div class="eva-top-hud">
+    <div class="eva-hud-badge">
+      <span class="eva-status-dot"></span>
+      <span class="eva-status-text" id="statusBadge">第一人稱出艙視角 · 深空全景無黑邊平穩推進</span>
     </div>
+  </div>
+  <!-- 1. 底層：深空全景視口總成 (第一人稱漫步時，深空景象真實放大／縮小) -->
+  <div class="space-cosmos-rig" id="spaceCosmosRig">
+    <div class="deep-space-panorama" id="deepSpaceBg"></div>
+    <div class="starlight-twinkle-layer"></div>
 
-    <!-- 月球目標熱區 (滑鼠移入時顯示閃爍框線與"案件管理系統") -->
-    <div class="planet-target-hotspot moon-target" id="targetMoon" tabindex="0">
-      <div class="target-reticle-box">
-        <div class="reticle-label">案件管理系統</div>
-        <div class="reticle-bracket rb-tl"></div>
-        <div class="reticle-bracket rb-tr"></div>
-        <div class="reticle-bracket rb-bl"></div>
-        <div class="reticle-bracket rb-br"></div>
-        <div class="reticle-scan-line"></div>
+    <!-- 深空天體互動目標層 (月球：案件管理系統 / 地球：報告產生器) -->
+    <div class="celestial-targets-layer" id="celestialTargets">
+      <!-- 地球目標熱區 (滑鼠移入時顯示閃爍框線與"報告產生器") -->
+      <div class="planet-target-hotspot earth-target" id="targetEarth" tabindex="0">
+        <div class="target-reticle-box">
+          <div class="reticle-label">報告產生器</div>
+          <div class="reticle-bracket rb-tl"></div>
+          <div class="reticle-bracket rb-tr"></div>
+          <div class="reticle-bracket rb-bl"></div>
+          <div class="reticle-bracket rb-br"></div>
+          <div class="reticle-scan-line"></div>
+        </div>
+      </div>
+
+      <!-- 月球目標熱區 (滑鼠移入時顯示閃爍框線與"案件管理系統") -->
+      <div class="planet-target-hotspot moon-target" id="targetMoon" tabindex="0">
+        <div class="target-reticle-box">
+          <div class="reticle-label">案件管理系統</div>
+          <div class="reticle-bracket rb-tl"></div>
+          <div class="reticle-bracket rb-tr"></div>
+          <div class="reticle-bracket rb-bl"></div>
+          <div class="reticle-bracket rb-br"></div>
+          <div class="reticle-scan-line"></div>
+        </div>
+      </div>
+
+      <!-- 火星目標熱區 (滑鼠移入時顯示閃爍框線與"火星觀測站") -->
+      <div class="planet-target-hotspot mars-target" id="targetMars" tabindex="0">
+        <div class="target-reticle-box">
+          <div class="reticle-label">火星觀測站</div>
+          <div class="reticle-bracket rb-tl"></div>
+          <div class="reticle-bracket rb-tr"></div>
+          <div class="reticle-bracket rb-bl"></div>
+          <div class="reticle-bracket rb-br"></div>
+          <div class="reticle-scan-line"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1569,18 +1666,28 @@
       setTimeout(() => {
         stage.classList.add("doors-sliding");
         playTone(160, 'sawtooth', 1.2, 0, 0.08);
+        if (statusBadge) statusBadge.textContent = "AIRLOCK: 正在開啟雙扇氣密門...";
       }, 500);
 
-      // 5. 第二階段：內門完全開啟後，將視野往門外推進看到星空 (Camera Dolly Forward)
+      // 5. 第二階段：內門完全開啟後，平穩推進走出艙門，太空景物平穩放大推進！
       setTimeout(() => {
-        stage.classList.add("camera-dolly-in");
-        playTone(110, 'sine', 1.8, 0, 0.12);
+        stage.classList.remove("walking-back");
+        stage.classList.add("walking-out");
+        if (statusBadge) statusBadge.textContent = "EVA: 正在步出艙門 · 深空全景無黑邊平穩推進...";
+
+        // 磁力靴踏步節奏
+        setTimeout(() => playBootstepSound(1), 350);
+        setTimeout(() => playBootstepSound(2), 1100);
+        setTimeout(() => playBootstepSound(3), 1900);
+        playTone(110, 'sine', 2.2, 0, 0.14);
+        playSpacewalkTransitionSound();
       }, 2300);
 
-      // 6. 浮現重新關閉艙門控制列
+      // 6. 完全步入深空後，浮現退回艙內控制列
       setTimeout(() => {
+        if (statusBadge) statusBadge.textContent = "EVA: 已步入外太空 // 地球、月球、火星全景展現 (無黑邊)";
         recloseBar.style.display = "block";
-      }, 4200);
+      }, 4800);
 
     } else {
       // 驗證失敗：天花板與 HUD 紅燈急促閃爍、警告音、全息面板告警震動
@@ -1612,20 +1719,29 @@
     recloseBar.style.display = "none";
     hudStatus.className = "hud-status-text";
     hudStatus.textContent = "RETRACTING VIEW // SEALING AIRLOCK...";
+    if (statusBadge) statusBadge.textContent = "EVA: 正在退回艙門內部 · 深空景象平穩收回 (滿版無黑邊)...";
 
-    // 1. 第一階段：視角由深空拉回艙內 (Camera Dolly Back to Interior)
-    stage.classList.remove("camera-dolly-in");
-    playTone(140, 'sine', 1.5, 0, 0.1);
+    // 1. 第一階段：第一人稱向後退回艙內，太空景象縮小回到初始遠景
+    stage.classList.remove("walking-out");
+    stage.classList.add("walking-back");
+    
+    // 退後腳步聲
+    setTimeout(() => playBootstepSound(1), 300);
+    setTimeout(() => playBootstepSound(2), 950);
+    playTone(140, 'sine', 1.6, 0, 0.1);
 
-    // 2. 第二階段：視角回正後，內部兩扇裝甲門合攏鎖定 (Doors Slide Inward & Lock)
+    // 2. 第二階段：退回艙內定位後，內部兩扇裝甲門合攏鎖定 (Doors Slide Inward & Lock)
     setTimeout(() => {
+      stage.classList.remove("walking-back");
       stage.classList.remove("doors-sliding");
+      if (statusBadge) statusBadge.textContent = "AIRLOCK: 門框歸位 · 雙門合攏閉鎖中...";
       playTone(180, 'sawtooth', 1.2, 0, 0.08);
       setTimeout(() => {
         playTone(80, 'sine', 0.4, 0, 0.25);
         playTone(330, 'sine', 0.25, 0);
+        if (statusBadge) statusBadge.textContent = "AIRLOCK: 氣密門鎖定完畢 // 艙壓正常";
       }, 1600);
-    }, 1800);
+    }, 2400);
 
     // 3. 第三階段：天花板投影儀滑出降下，投射全息 HUD 面板
     setTimeout(() => {
@@ -1637,13 +1753,30 @@
       holoHud.classList.remove("alarm-shake");
 
       showHoloProjection();
-    }, 3800);
+    }, 4500);
   }
 
   /* ====================================================================
      門框實體「開」按鈕：全息投影控制 (延遲載入、手動投影與 HUD 收回)
      ==================================================================== */
   const btnKai = document.getElementById("btnKai");
+  const statusBadge = document.getElementById("statusBadge");
+
+  function playBootstepSound(stepNum) {
+    try {
+      const ctx = getAudioCtx();
+      if (!ctx) return;
+      const freq = stepNum % 2 === 1 ? 110 : 95;
+      playTone(freq, 'triangle', 0.18, 0, 0.28);
+      playTone(190, 'sawtooth', 0.07, 0.01, 0.16);
+      playTone(45, 'sine', 0.22, 0.02, 0.32);
+    } catch(e) {}
+  }
+
+  function playSpacewalkTransitionSound() {
+    playTone(65, 'sine', 3.0, 0.4, 0.28);
+    playTone(130, 'sine', 2.5, 0.8, 0.16);
+  }
 
   function playMechanicalSwitchSound() {
     playTone(160, 'sawtooth', 0.06, 0.0, 0.2);
@@ -1665,8 +1798,8 @@
   }
 
   function showHoloProjection() {
-    if (stage.classList.contains("doors-sliding") || stage.classList.contains("camera-dolly-in")) {
-      return; // 艙門已開啟或處於推進狀態不開啟全息
+    if (stage.classList.contains("doors-sliding") || stage.classList.contains("walking-out")) {
+      return; // 艙門已開啟或處於出艙漫步狀態不開啟全息
     }
 
     projectorAssembly.classList.remove("retracted");
@@ -1702,22 +1835,23 @@
   });
 
   /* ====================================================================
-     E. 深空天體鎖定與互動 (月球：案件管理系統 / 地球：報告產生器)
+     E. 深空天體鎖定與互動 (月球：案件管理系統 / 地球：報告產生器 / 火星：火星觀測站)
      ==================================================================== */
   const targetEarth = document.getElementById("targetEarth");
   const targetMoon = document.getElementById("targetMoon");
+  const targetMars = document.getElementById("targetMars");
 
   function setupCelestialTargets() {
     function bindTarget(el, name, freq) {
       if (!el) return;
       el.addEventListener("mouseenter", () => {
-        if (stage.classList.contains("camera-dolly-in")) {
+        if (stage.classList.contains("walking-out")) {
           playTone(freq, 'sine', 0.08, 0, 0.08);
           playTone(freq * 1.4, 'sine', 0.12, 0.05, 0.06);
         }
       });
       el.addEventListener("click", () => {
-        if (!stage.classList.contains("camera-dolly-in")) return;
+        if (!stage.classList.contains("walking-out")) return;
         playTone(523.25, 'sine', 0.15, 0, 0.15);
         playTone(1046.5, 'sine', 0.35, 0.08, 0.18);
       });
@@ -1725,6 +1859,7 @@
 
     bindTarget(targetEarth, "報告產生器", 659.25);
     bindTarget(targetMoon, "案件管理系統", 880.0);
+    bindTarget(targetMars, "火星觀測站", 784.0);
   }
   setupCelestialTargets();
 
